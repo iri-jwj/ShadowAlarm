@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".addeditpage.AddEditAct"></activity>
+        <activity android:name=".addeditpage.AddEditAct"/>
         <activity android:name=".homepage.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +26,7 @@
         <receiver android:name=".AlarmReceiver">
             <intent-filter>
                 <action android:name="com.android.deskclock.alarmAction" />
+                <action android:name= "com.android.deskclock.actionDelay"/>
             </intent-filter>
         </receiver>
 
