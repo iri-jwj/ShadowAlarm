@@ -8,6 +8,5 @@ data class ShadowAlarm(
     var label: String,
     var remindHours: Int,
     var remindMinutes: Int,
-    var remindDaysInWeek: Int,
-    var alarmAudio: Uri
+    var remindDaysInWeek: Int
 )

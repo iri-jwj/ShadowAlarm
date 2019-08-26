@@ -39,7 +39,6 @@ public class AlarmDatabaseHelper {
         alarmValues.put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR, alarm.getRemindHours());
         alarmValues.put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE, alarm.getRemindMinutes());
         alarmValues.put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK, alarm.getRemindDaysInWeek());
-        alarmValues.put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_AUDIO, alarm.getAlarmAudio().toString());
         writableDb.insert(AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME, null, alarmValues);
         writableDb.setTransactionSuccessful();
         writableDb.close();
@@ -53,7 +52,6 @@ public class AlarmDatabaseHelper {
         newAlarmValues.put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR, newAlarm.getRemindHours());
         newAlarmValues.put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE, newAlarm.getRemindMinutes());
         newAlarmValues.put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK, newAlarm.getRemindDaysInWeek());
-        newAlarmValues.put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_AUDIO, newAlarm.getAlarmAudio().toString());
         writableDb.update(AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME, newAlarmValues, "id = ?",
                 new String[]{newAlarm.getId().toString()});
 
@@ -77,9 +75,8 @@ public class AlarmDatabaseHelper {
                         cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL)),
                         cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR)),
                         cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE)),
-                        cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK)),
-                        Uri.parse(cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_AUDIO)))
-                ));
+                        cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK)))
+                );
 
             }
         } else {
