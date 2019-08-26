@@ -1,4 +1,4 @@
 package com.android.deskclock
 
-interface BasePresenter<T : BaseView> {
+abstract class BasePresenter<T : BaseView> {
 }

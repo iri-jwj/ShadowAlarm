@@ -1,4 +1,6 @@
 package com.android.deskclock
 
-interface BaseView {
+import androidx.appcompat.app.AppCompatActivity
+
+abstract class BaseView : AppCompatActivity(){
 }

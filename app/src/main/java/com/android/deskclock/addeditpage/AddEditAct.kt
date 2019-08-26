@@ -1,10 +1,10 @@
 package com.android.deskclock.addeditpage
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.android.deskclock.BaseView
 import com.android.deskclock.R
 
-class AddEditAct : AppCompatActivity() {
+class AddEditAct : BaseView() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
