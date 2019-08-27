@@ -75,7 +75,7 @@ object AlarmManagerUtil {
         if (needCancelFlags == 0) {
             val intent = Intent(alarmAction)
             val pendingIntent =
-                PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_NO_CREATE)
+                PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_IMMUTABLE)
             mAlarmManager.cancel(pendingIntent)
         } else {
             for (i in 0..6) {
@@ -88,7 +88,7 @@ object AlarmManagerUtil {
                             mContext,
                             id + temp,
                             intent,
-                            PendingIntent.FLAG_NO_CREATE
+                            PendingIntent.FLAG_IMMUTABLE
                         )
                     mAlarmManager.cancel(pendingIntent)
                 }
@@ -130,7 +130,7 @@ object AlarmManagerUtil {
 
         if (remindFlags == 0) {
             val pendingIntent =
-                PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_NO_CREATE)
+                PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_IMMUTABLE)
             mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             Log.d(TAG,"in set once alarm time = ${calendar.timeInMillis - System.currentTimeMillis()}")
         } else {
@@ -140,7 +140,7 @@ object AlarmManagerUtil {
                         mContext,
                         id,
                         intent,
-                        PendingIntent.FLAG_NO_CREATE
+                        PendingIntent.FLAG_IMMUTABLE
                     )
                 mAlarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
@@ -161,7 +161,7 @@ object AlarmManagerUtil {
                                 mContext,
                                 id + temp,
                                 intent,
-                                PendingIntent.FLAG_NO_CREATE
+                                PendingIntent.FLAG_IMMUTABLE
                             )
                         mAlarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,

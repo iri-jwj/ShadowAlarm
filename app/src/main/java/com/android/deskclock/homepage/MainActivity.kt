@@ -15,7 +15,7 @@ class MainActivity : BaseView<HomePagePresenter>() {
         setContentView(R.layout.activity_main)
 
         test.setOnClickListener {
-            AlarmManagerUtil.setUpWithContext(this).setAlarm(ShadowAlarm(UUID.randomUUID(),"testAlarm",9,59,0))
+            AlarmManagerUtil.setUpWithContext(this).setAlarm(ShadowAlarm(UUID.randomUUID(),"testAlarm",10,50,0))
         }
     }
 
