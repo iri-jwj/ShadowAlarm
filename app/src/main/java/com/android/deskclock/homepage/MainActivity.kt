@@ -16,12 +16,9 @@ class MainActivity : BaseView<HomePagePresenter>() {
 
         test.setOnClickListener {
             AlarmManagerUtil.setUpWithContext(this)
-                .setAlarm(ShadowAlarm(UUID.randomUUID(), "testAlarm", 15, 13, 0))
+                .setAlarm(ShadowAlarm(UUID.randomUUID(), "testAlarm", 15, 13, 0, false))
         }
     }
-
-
-
 
     override fun setPresenter(presenter: HomePagePresenter) {
         super.setPresenter(presenter)
