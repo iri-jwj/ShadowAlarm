@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.android.deskclock.BaseView
 import com.android.deskclock.R
 
-class AddEditAct : BaseView() {
+class AddEditAct : BaseView<AddEditPresenter>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

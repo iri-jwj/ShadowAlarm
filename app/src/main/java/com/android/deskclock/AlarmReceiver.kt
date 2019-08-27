@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
+import android.util.Log
 import com.android.deskclock.util.AlarmManagerUtil
 import com.android.deskclock.util.AlarmNotificationUtil
 
@@ -12,9 +13,12 @@ class AlarmReceiver : BroadcastReceiver() {
 
     companion object {
         const val ACTION_DELAY = "com.android.deskclock.actionDelay"
+        private const val TAG = "AlarmReceiver"
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
+        Log.d(TAG, "receive Action : ${intent?.action}")
+
         when (intent!!.action) {
             ACTION_DELAY -> {
 

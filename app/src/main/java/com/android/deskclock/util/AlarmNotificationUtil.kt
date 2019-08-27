@@ -49,6 +49,7 @@ class AlarmNotificationUtil(
         remoteView.setOnClickPendingIntent(R.id.notification_alarm_parent, pendingIntent)
 
         val notification = builder.setCustomContentView(remoteView)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setFullScreenIntent(pendingIntent, true).build()

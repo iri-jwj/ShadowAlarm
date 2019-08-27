@@ -5,6 +5,8 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import com.android.deskclock.AlarmReceiver
 import com.android.deskclock.model.ShadowAlarm
 import java.util.*
 
@@ -13,13 +15,16 @@ object AlarmManagerUtil {
 
     const val alarmAction = "com.android.deskclock.alarmAction"
 
+    private const val TAG = "AlarmManagerUtil"
+
     private lateinit var mContext: Context
     private lateinit var mAlarmManager: AlarmManager
     private const val EVERYDAY: Int = 0x1111111
 
-    fun setUpWithContext(context: Context) {
+    fun setUpWithContext(context: Context):AlarmManagerUtil {
         mContext = context.applicationContext
         initData()
+        return this
     }
 
     private fun initData() {
@@ -70,7 +75,7 @@ object AlarmManagerUtil {
         if (needCancelFlags == 0) {
             val intent = Intent(alarmAction)
             val pendingIntent =
-                PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_NO_CREATE)
             mAlarmManager.cancel(pendingIntent)
         } else {
             for (i in 0..6) {
@@ -83,7 +88,7 @@ object AlarmManagerUtil {
                             mContext,
                             id + temp,
                             intent,
-                            PendingIntent.FLAG_UPDATE_CURRENT
+                            PendingIntent.FLAG_NO_CREATE
                         )
                     mAlarmManager.cancel(pendingIntent)
                 }
@@ -95,10 +100,12 @@ object AlarmManagerUtil {
     fun setAlarm(model: ShadowAlarm) {
         val id = model.id.hashCode()
         setUpAlarms(id, model.label, model.remindHours, model.remindMinutes, model.remindDaysInWeek)
+        Log.d(TAG,"in set Alarm")
     }
 
     private fun setUpAlarms(id: Int, label: String, hour: Int, minutes: Int, remindFlags: Int) {
-        val intent = Intent(alarmAction)
+        val intent = Intent(mContext,AlarmReceiver::class.java)
+        intent.action = alarmAction
         intent.putExtra("id", id)
         intent.putExtra("label", label)
 
@@ -107,19 +114,25 @@ object AlarmManagerUtil {
             ((calendar[Calendar.HOUR_OF_DAY] == hour) and (calendar[Calendar.MINUTE] > minutes))
         ) {
             calendar.add(Calendar.DAY_OF_MONTH, 1)
-            calendar.set(
-                calendar[Calendar.YEAR],
-                calendar[Calendar.MONTH],
-                calendar[Calendar.DAY_OF_MONTH],
-                hour,
-                minutes
-            )
+            Log.d(TAG,"add one day")
         }
+
+        calendar.set(
+            calendar[Calendar.YEAR],
+            calendar[Calendar.MONTH],
+            calendar[Calendar.DAY_OF_MONTH],
+            hour,
+            minutes,
+            0
+        )
+
+        Log.d(TAG,"${calendar[Calendar.HOUR_OF_DAY]}  ${calendar[Calendar.MINUTE]}")
 
         if (remindFlags == 0) {
             val pendingIntent =
-                PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_NO_CREATE)
             mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+            Log.d(TAG,"in set once alarm time = ${calendar.timeInMillis - System.currentTimeMillis()}")
         } else {
             if (remindFlags == EVERYDAY) {
                 val pendingIntent =
@@ -127,7 +140,7 @@ object AlarmManagerUtil {
                         mContext,
                         id,
                         intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_NO_CREATE
                     )
                 mAlarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
@@ -135,6 +148,8 @@ object AlarmManagerUtil {
                     24 * 60 * 60 * 1000,
                     pendingIntent
                 )
+                Log.d(TAG,"in set repeat alarm")
+
             } else {
                 for (i in 1..7) {
                     var temp = 1
@@ -146,7 +161,7 @@ object AlarmManagerUtil {
                                 mContext,
                                 id + temp,
                                 intent,
-                                PendingIntent.FLAG_UPDATE_CURRENT
+                                PendingIntent.FLAG_NO_CREATE
                             )
                         mAlarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,
@@ -156,6 +171,8 @@ object AlarmManagerUtil {
                         )
                     }
                 }
+                Log.d(TAG,"in set repeat alarm")
+
 
             }
         }
