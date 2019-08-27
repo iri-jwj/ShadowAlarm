@@ -1,6 +1,5 @@
 package com.android.deskclock.model
 
-import android.net.Uri
 import java.util.*
 
 data class ShadowAlarm(
@@ -8,5 +7,6 @@ data class ShadowAlarm(
     var label: String,
     var remindHours: Int,
     var remindMinutes: Int,
-    var remindDaysInWeek: Int
+    var remindDaysInWeek: Int,
+    var isEnabled: Boolean
 )

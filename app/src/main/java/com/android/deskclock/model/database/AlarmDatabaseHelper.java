@@ -60,7 +60,7 @@ public class AlarmDatabaseHelper {
         writableDb.close();
     }
 
-    public List<ShadowAlarm> queryAlarm() {
+   /* public List<ShadowAlarm> queryAlarm() {
         List<ShadowAlarm> alarmFromDb = new ArrayList<>();
         writableDb = db.getWritableDatabase();
         writableDb.beginTransaction();
@@ -86,7 +86,7 @@ public class AlarmDatabaseHelper {
         cursor.close();
         writableDb.close();
         return alarmFromDb;
-    }
+    }*/
 
     public void deleteTargetAlarm(String id) {
         writableDb = db.getWritableDatabase();
