@@ -43,6 +43,12 @@
         </receiver>
 
         <service android:name=".util.AlarmOverlayService" />
+
+        <provider
+            android:name=".model.AlarmProvider"
+            android:authorities="com.android.deskclock.provider"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

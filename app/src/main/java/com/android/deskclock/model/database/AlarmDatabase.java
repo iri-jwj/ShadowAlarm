@@ -9,11 +9,11 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     private static final String DatabaseName = "AlarmDatabase.db";
     private static final int version = 1;
 
-    AlarmDatabase(Context context) {
+    public AlarmDatabase(Context context) {
         this(context, DatabaseName, null, version);
     }
 
-    AlarmDatabase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    private AlarmDatabase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
@@ -34,12 +34,12 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
     }
 
-    protected static final class AlarmDatabaseEntity {
-        static final String TABLE_NAME = "SHADOW_ALARM";
-        static final String COLUMN_ID = "id";
-        static final String COLUMN_LABEL = "label";
-        static final String COLUMN_REMINDHOUR = "remindHours";
-        static final String COLUMN_REMINDMINUTE = "remindMinutes";
-        static final String COLUMN_REMINDDAYSINWEEK = "remindDaysInWeek";
+    public static final class AlarmDatabaseEntity {
+        public static final String TABLE_NAME = "SHADOW_ALARM";
+        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_LABEL = "label";
+        public static final String COLUMN_REMINDHOUR = "remindHours";
+        public static final String COLUMN_REMINDMINUTE = "remindMinutes";
+        public static final String COLUMN_REMINDDAYSINWEEK = "remindDaysInWeek";
     }
 }
