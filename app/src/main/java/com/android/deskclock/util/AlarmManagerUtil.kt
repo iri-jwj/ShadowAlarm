@@ -30,23 +30,34 @@ object AlarmManagerUtil {
         mAlarmManager = mContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     }
 
-    fun cancelAlarm(id: Int) {
-        cancelAlarm(id, 0)
+    fun cancelAlarm(alarm: ShadowAlarm) {
+        cancelAlarm(alarm.id.hashCode(), alarm.remindDaysInWeek)
     }
 
     fun updateAlarm(old: ShadowAlarm, new: ShadowAlarm) {
         val oldFlags = old.remindDaysInWeek
         val newFlags = new.remindDaysInWeek
-        val resultFlags = calUpdatedFlags(oldFlags, newFlags)
+        if (oldFlags != newFlags) {
+            val resultFlags = calUpdatedFlags(oldFlags, newFlags)
 
-        cancelAlarm(old.id.hashCode(), resultFlags[1])
-        setUpAlarms(
-            new.id.hashCode(),
-            new.label,
-            new.remindHours,
-            new.remindMinutes,
-            resultFlags[1]
-        )
+            when {
+                old.isEnabled == new.isEnabled -> {
+                    cancelAlarm(old.id.hashCode(), resultFlags[1])
+                    setUpAlarms(
+                        new.id.hashCode(),
+                        new.label,
+                        new.remindHours,
+                        new.remindMinutes,
+                        resultFlags[1]
+                    )
+                }
+                old.isEnabled -> {
+                    cancelAlarm(old)
+                }
+                else -> setAlarm(new)
+            }
+        }
+
     }
 
     private fun calUpdatedFlags(oldFlags: Int, newFlags: Int): IntArray {

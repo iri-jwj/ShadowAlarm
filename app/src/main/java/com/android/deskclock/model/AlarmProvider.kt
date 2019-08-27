@@ -13,8 +13,8 @@ import com.android.deskclock.model.database.AlarmDatabase
 
 class AlarmProvider(context: Context) : ContentProvider() {
     companion object {
-        private const val AUTHORITY = "com.android.deskclock.provider"
-        private const val PATH = "shadowAlarm"
+         const val AUTHORITY = "com.android.deskclock.provider"
+         const val PATH = "shadowAlarm"
         private const val CODE = 101
 
         fun buildUriMatcher(): UriMatcher {

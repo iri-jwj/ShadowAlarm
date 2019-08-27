@@ -27,8 +27,9 @@
         app:layout_constraintTop_toBottomOf="@id/item_clock_time" />
 
     <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/item_switch"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="@dimen/ex_margin"
         android:thumb="@drawable/switch_ios_thumb"
         android:track="@drawable/switch_ios_track_selector"
