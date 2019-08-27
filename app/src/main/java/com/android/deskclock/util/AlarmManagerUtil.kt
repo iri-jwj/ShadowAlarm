@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.android.deskclock.AlarmReceiver
 import com.android.deskclock.model.ShadowAlarm
 import java.util.*
 
@@ -104,7 +103,7 @@ object AlarmManagerUtil {
     }
 
     private fun setUpAlarms(id: Int, label: String, hour: Int, minutes: Int, remindFlags: Int) {
-        val intent = Intent(mContext,AlarmReceiver::class.java)
+        val intent = Intent(mContext, AlarmReceiver::class.java)
         intent.action = alarmAction
         intent.putExtra("id", id)
         intent.putExtra("label", label)

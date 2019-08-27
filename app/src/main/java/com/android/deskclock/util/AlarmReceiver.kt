@@ -1,4 +1,4 @@
-package com.android.deskclock
+package com.android.deskclock.util
 
 import android.app.KeyguardManager
 import android.content.BroadcastReceiver
@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import android.util.Log
-import com.android.deskclock.util.AlarmManagerUtil
-import com.android.deskclock.util.AlarmNotificationUtil
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -40,8 +38,17 @@ class AlarmReceiver : BroadcastReceiver() {
         if (isScreenLighted and !isLocked) {
             showAlarmByNotification(context, label, id)
         } else {
-            showAlarmByOverlayWindow(context, label, id)
+            //showAlarmByOverlayWindow(context, label, id)
+            showAlarmByActivity(context, label, id)
         }
+    }
+
+    private fun showAlarmByActivity(context: Context, label: String?, id: Int) {
+        val intent = Intent(context, LockedScreenAlarmActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra("label",label)
+        intent.putExtra("id",id)
+        context.startActivity(intent)
     }
 
 

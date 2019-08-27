@@ -1,4 +1,4 @@
-package com.android.deskclock
+package com.android.deskclock.util
 
 import android.app.Service
 import android.content.Context
@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
+import com.android.deskclock.R
 
 
 class AlarmOverlayService : Service() {
