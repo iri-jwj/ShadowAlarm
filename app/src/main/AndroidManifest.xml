@@ -20,7 +20,8 @@
 
         <activity
             android:name=".util.LockedScreenAlarmActivity"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity android:name=".addeditpage.AddEditAct" />
         <activity android:name=".homepage.MainActivity">

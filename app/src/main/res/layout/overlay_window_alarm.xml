@@ -34,7 +34,7 @@
         app:layout_constraintTop_toBottomOf="@id/overlay_title" />
 
     <Button
-        android:id="@+id/overlay_cancel"
+        android:id="@+id/overlay_negative"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -47,7 +47,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/overlay_delay"
+        android:id="@+id/overlay_positive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

@@ -1,63 +1,51 @@
 package com.android.deskclock.util
 
-import android.app.Service
 import android.content.Context
-import android.content.Intent
 import android.os.Build
-import android.os.IBinder
-import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import com.android.deskclock.R
 
+class OverlayWindowUtil(
+    private val context: Context, private val title: String,
+    private val message: String
+) {
 
-class AlarmOverlayService : Service() {
+    private var onNegativeClicked: () -> Unit = {}
+    private var onPositiveClicked: () -> Unit = {}
 
-    private lateinit var wakeLock: PowerManager.WakeLock
-
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
+    fun setOnNegativeClickedListener(onNegativeClicked: () -> Unit): OverlayWindowUtil {
+        this.onNegativeClicked = onNegativeClicked
+        return this
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val label = intent?.getStringExtra("label")
-        val id = intent?.getIntExtra("id", 0)
-        showFloatingView(label, id)
-        return super.onStartCommand(intent, flags, startId)
+    fun setOnPositiveClicked(onPositiveClicked: () -> Unit): OverlayWindowUtil {
+        this.onPositiveClicked = onPositiveClicked
+        return this
     }
 
-    private fun showFloatingView(label: String?, id: Int?) {
-
-        checkInfoValid(label, id)
-
-        val inflater = LayoutInflater.from(this)
+    fun showFloatingView() {
+        val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.overlay_window_alarm, null)
         val windowManager =
-            (applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
 
         view.apply {
-            findViewById<Button>(R.id.overlay_positive).setOnClickListener {
-                val intent = Intent(
-                    this@AlarmOverlayService,
-                    AlarmReceiver::class.java
-                )
-                intent.action = AlarmReceiver.ACTION_DELAY
-                sendBroadcast(intent)
-                windowManager.removeView(view)
-                turnOffScreen()
-            }
+            findViewById<TextView>(R.id.overlay_label).text = message
+            findViewById<TextView>(R.id.overlay_title).text = title
 
-            findViewById<TextView>(R.id.overlay_label).text = label
+            findViewById<Button>(R.id.overlay_positive).setOnClickListener {
+                onPositiveClicked.invoke()
+                windowManager.removeView(view)
+            }
 
             findViewById<Button>(R.id.overlay_negative).setOnClickListener {
+                onNegativeClicked.invoke()
                 windowManager.removeView(view)
-                turnOffScreen()
             }
         }
-
-        turnOnScreen()
 
         val layoutParams = buildLayoutParams(WindowManager.LayoutParams())
 
@@ -67,18 +55,6 @@ class AlarmOverlayService : Service() {
         )
     }
 
-    private fun turnOnScreen() {
-        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-        wakeLock = pm.newWakeLock(
-            PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_DIM_WAKE_LOCK,
-            "com.android.deskclock:wakelock"
-        )
-        wakeLock.acquire()//亮屏
-    }
-
-    private fun turnOffScreen() {
-        wakeLock.release()
-    }
 
     private fun buildLayoutParams(params: WindowManager.LayoutParams): WindowManager.LayoutParams {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -99,7 +75,4 @@ class AlarmOverlayService : Service() {
         return params
     }
 
-    private fun checkInfoValid(label: String?, id: Int?) {
-        require(!(label == null || id == null)) { "label and id cannot be null" }
-    }
 }

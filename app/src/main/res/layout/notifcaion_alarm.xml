@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notification_alarm_parent"
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:background="@null"
-    android:id="@+id/notification_alarm_parent"
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,8 +17,8 @@
             android:id="@+id/notification_icon"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@drawable/notification_icon_alarm"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:src="@drawable/notification_icon_alarm" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/default_margin"
             android:text="@string/app_name"
-            android:textAppearance="@android:style/TextAppearance.Material.Notification.Info"
+            android:textAppearance="@android:style/TextAppearance.Material.Notification.Title"
             android:textSize="@dimen/notification_app_name" />
     </LinearLayout>
 
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
-        android:layout_marginStart="@dimen/default_margin"
+        android:layout_marginStart="@dimen/ex_margin"
         android:layout_marginTop="@dimen/default_margin"
         android:textAppearance="@android:style/TextAppearance.Material.Notification.Info"
         android:textSize="@dimen/notification_label" />
