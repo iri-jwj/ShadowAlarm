@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_default_background"
     tools:context=".homepage.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:background="@color/app_default_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,7 +21,8 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_gravity="start"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:src="@drawable/alarm_filter" />
 
         <ImageView
             android:id="@+id/add_alarm"
@@ -27,7 +30,8 @@
             android:layout_height="32dp"
             android:layout_gravity="end"
             android:layout_marginEnd="@dimen/ex_margin"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:src="@drawable/alarm_add" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -35,6 +39,7 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/app_default_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />

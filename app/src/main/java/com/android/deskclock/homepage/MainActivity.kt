@@ -14,7 +14,7 @@ import com.android.deskclock.addeditpage.AddEditAct
 import com.android.deskclock.model.ShadowAlarm
 
 class MainActivity : BaseView<HomePagePresenter>() {
-    companion object{
+    companion object {
         private const val addNewAlarmCode = 100
         const val editAlarmCode = 101
     }
@@ -25,7 +25,7 @@ class MainActivity : BaseView<HomePagePresenter>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-       mPresenter = HomePagePresenter(this)
+        mPresenter = HomePagePresenter(this)
         mPresenter.start()
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -35,14 +35,14 @@ class MainActivity : BaseView<HomePagePresenter>() {
             }
 
             findViewById<ImageView>(R.id.add_alarm).setOnClickListener {
-                val intent = Intent(this@MainActivity,AddEditAct::class.java)
-                startActivityForResult(intent,addNewAlarmCode)
+                val intent = Intent(this@MainActivity, AddEditAct::class.java)
+                startActivityForResult(intent, addNewAlarmCode)
             }
         }
 
         mAdapter.apply {
             setOnCheckedChangeCallback { b, shadowAlarm ->
-                if (b!= shadowAlarm.isEnabled){
+                if (b != shadowAlarm.isEnabled) {
                     shadowAlarm.isEnabled = b
                     mAdapter.refreshAlarmList(mPresenter.updateAlarm(shadowAlarm))
                 }
@@ -56,7 +56,12 @@ class MainActivity : BaseView<HomePagePresenter>() {
         recyclerView.apply {
             adapter = mAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
-            addItemDecoration(DividerItemDecoration(this@MainActivity,DividerItemDecoration.VERTICAL))
+            addItemDecoration(
+                DividerItemDecoration(
+                    this@MainActivity,
+                    DividerItemDecoration.VERTICAL
+                )
+            )
         }
     }
 
@@ -67,16 +72,16 @@ class MainActivity : BaseView<HomePagePresenter>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            when(requestCode){
-                addNewAlarmCode->{
-                   val alarm = data?.getParcelableExtra<ShadowAlarm>("alarm")
-                    if (alarm!=null)
+            when (requestCode) {
+                addNewAlarmCode -> {
+                    val alarm = data?.getParcelableExtra<ShadowAlarm>("alarm")
+                    if (alarm != null)
                         mAdapter.refreshAlarmList(mPresenter.addAlarm(alarm))
                 }
 
-                editAlarmCode->{
+                editAlarmCode -> {
                     val alarm = data?.getParcelableExtra<ShadowAlarm>("alarm")
-                    if (alarm!=null)
+                    if (alarm != null)
                         mAdapter.refreshAlarmList(mPresenter.updateAlarm(alarm))
                 }
             }

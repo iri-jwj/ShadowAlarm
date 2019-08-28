@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.deskclock.R
 import com.android.deskclock.addeditpage.AddEditAct
 import com.android.deskclock.model.ShadowAlarm
+import com.android.deskclock.util.OverlayWindowUtil
 import java.lang.StringBuilder
 
 class AlarmsAdapter(private val activity: Activity) :
@@ -17,20 +18,20 @@ class AlarmsAdapter(private val activity: Activity) :
 
     private var alarmList: List<ShadowAlarm>? = null
 
-    private lateinit var onCheckedChangeCallback:(Boolean,ShadowAlarm)->Unit
+    private lateinit var onCheckedChangeCallback: (Boolean, ShadowAlarm) -> Unit
 
-    private lateinit var onItemDeleteCallback:(ShadowAlarm)->Unit
+    private lateinit var onItemDeleteCallback: (ShadowAlarm) -> Unit
 
     fun refreshAlarmList(alarms: List<ShadowAlarm>) {
         alarmList = alarms
         notifyDataSetChanged()
     }
 
-    fun setOnItemDeleteCallback(callback: (ShadowAlarm) -> Unit){
+    fun setOnItemDeleteCallback(callback: (ShadowAlarm) -> Unit) {
         onItemDeleteCallback = callback
     }
 
-    fun setOnCheckedChangeCallback(callback:(Boolean,ShadowAlarm)->Unit){
+    fun setOnCheckedChangeCallback(callback: (Boolean, ShadowAlarm) -> Unit) {
         onCheckedChangeCallback = callback
     }
 
@@ -57,17 +58,23 @@ class AlarmsAdapter(private val activity: Activity) :
             getFormattedLabelString(alarm.label, alarm.remindDaysInWeek)
 
         holder.getSwitchButton().setOnCheckedChangeListener { _, isChecked ->
-            onCheckedChangeCallback(isChecked,alarm)
+            onCheckedChangeCallback(isChecked, alarm)
         }
 
         holder.itemView.setOnClickListener {
-            val intent = Intent(activity,AddEditAct::class.java)
-            intent.putExtra("alarm",alarm)
-            activity.startActivityForResult(intent,MainActivity.editAlarmCode)
+            val intent = Intent(activity, AddEditAct::class.java)
+            intent.putExtra("alarm", alarm)
+            activity.startActivityForResult(intent, MainActivity.editAlarmCode)
         }
 
         holder.itemView.setOnLongClickListener {
-            //todo 长按弹出确认是否删除
+            OverlayWindowUtil(
+                activity,
+                "Delete Alert",
+                "confirm to delete ${alarm.label}?"
+            ).setOnPositiveClicked {
+                onItemDeleteCallback(alarm)
+            }
             true
         }
     }
@@ -138,9 +145,9 @@ class AlarmsAdapter(private val activity: Activity) :
 
     }
 
-    class AlarmViewHolder(private val alarmView: View) : RecyclerView.ViewHolder(alarmView) {
+    class AlarmViewHolder(alarmView: View) : RecyclerView.ViewHolder(alarmView) {
         fun getClockTimeTextView(): TextView {
-            return itemView.findViewById<TextView>(R.id.item_clock_time)
+            return itemView.findViewById(R.id.item_clock_time)
         }
 
         fun getLabelTextView(): TextView {
