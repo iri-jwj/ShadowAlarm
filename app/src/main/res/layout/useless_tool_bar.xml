@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="76dp">
+
+    <TextView
+        android:id="@+id/toolbar_left_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/ex_margin"
+        android:gravity="start"
+        android:textColor="@color/add_edit_toolbar_text"
+        android:textSize="@dimen/notification_app_name" />
+
+
+    <ImageView
+        android:id="@+id/toolbar_image_left"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="@dimen/ex_margin"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:scaleType="centerInside" />
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/listItemText"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/toolbar_right_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/ex_margin"
+        android:gravity="end"
+        android:textColor="@color/add_edit_toolbar_text"
+        android:textSize="@dimen/notification_app_name" />
+
+
+    <ImageView
+        android:id="@+id/toolbar_image_right"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="@dimen/ex_margin"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:scaleType="centerInside" />
+</RelativeLayout>

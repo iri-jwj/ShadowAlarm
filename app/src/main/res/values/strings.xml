@@ -8,4 +8,15 @@
     <string name="add_edit_audio">铃声</string>
     <string name="add_edit_cancel">取消</string>
     <string name="add_edit_save">存储</string>
+
+    <string name="select_mon">周一</string>
+    <string name="select_tues">周二</string>
+    <string name="select_wed">周三</string>
+    <string name="select_thur">周四</string>
+    <string name="select_fri">周五</string>
+    <string name="select_sat">周六</string>
+    <string name="select_sun">周日</string>
+    <string name="select_back">返回</string>
+
+    <string name="label_hint">键入标题~</string>
 </resources>
