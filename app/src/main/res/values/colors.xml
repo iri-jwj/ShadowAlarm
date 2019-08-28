@@ -7,4 +7,8 @@
     <color name="colorAccent_dim">#A7526E</color>
     <color name="lock_screen_alarm_dark">#222020</color>
     <color name="app_default_background">#2B2B2B</color>
+    <color name="divider_line">#333333</color>
+    <color name="add_edit_sub_text">#3F3F3F</color>
+    <color name="add_edit_toolbar_text">#E0620D</color>
+
 </resources>

@@ -3,4 +3,9 @@
     <string name="overlay_title">ShadowAlarm Alert</string>
     <string name="remind_later">Remind Later</string>
     <string name="close_alarm">Close</string>
+    <string name="is_repeat">重复</string>
+    <string name="add_edit_label">标签</string>
+    <string name="add_edit_audio">铃声</string>
+    <string name="add_edit_cancel">取消</string>
+    <string name="add_edit_save">存储</string>
 </resources>
