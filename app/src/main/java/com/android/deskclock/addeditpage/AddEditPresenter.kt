@@ -105,4 +105,8 @@ class AddEditPresenter(private val action: String) : BasePresenter() {
     fun getResultAlarm(): ShadowAlarm {
         return mAlarm
     }
+
+    fun saveNewEditRepeat(repeat: Int) {
+        mAlarm.remindDaysInWeek = repeat
+    }
 }

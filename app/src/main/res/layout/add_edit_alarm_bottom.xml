@@ -13,6 +13,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="36dp"
+        android:id="@+id/add_edit_repeat_layout"
         android:orientation="horizontal">
 
         <TextView
@@ -60,6 +61,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="36dp"
+        android:id="@+id/add_edit_label_layout"
         android:orientation="horizontal">
 
         <TextView
