@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/app_default_background"
     android:orientation="vertical">
 
-    <view
+    <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/divider_line" />
@@ -50,7 +50,7 @@
             android:src="@drawable/right_arrow" />
     </RelativeLayout>
 
-    <view
+    <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_marginStart="@dimen/ex_margin"
@@ -98,7 +98,7 @@
             android:src="@drawable/right_arrow" />
     </RelativeLayout>
 
-    <view
+    <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_marginStart="@dimen/ex_margin"
@@ -129,13 +129,14 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="32dp"
+            android:text="@string/alarm_audio"
             android:layout_toEndOf="@id/add_edit_audio_text"
             android:gravity="end"
             android:textColor="@color/add_edit_sub_text"
             android:textSize="@dimen/notification_label" />
     </RelativeLayout>
 
-    <view
+    <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/divider_line" />

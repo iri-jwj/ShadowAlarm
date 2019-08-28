@@ -17,6 +17,8 @@
     <string name="select_sat">周六</string>
     <string name="select_sun">周日</string>
     <string name="select_back">返回</string>
+    <string name="alarm_audio">马林巴琴</string>
 
     <string name="label_hint">键入标题~</string>
+
 </resources>

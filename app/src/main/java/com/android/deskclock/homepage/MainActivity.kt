@@ -3,14 +3,13 @@ package com.android.deskclock.homepage
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.Toolbar
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.deskclock.BaseView
 import com.android.deskclock.R
 import com.android.deskclock.addeditpage.AddEditAct
+import com.android.deskclock.customview.UselessToolbar
 import com.android.deskclock.model.ShadowAlarm
 
 class MainActivity : BaseView<HomePagePresenter>() {
@@ -28,14 +27,15 @@ class MainActivity : BaseView<HomePagePresenter>() {
         mPresenter = HomePagePresenter(this)
         mPresenter.start()
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById<UselessToolbar>(R.id.toolbar)
         toolbar.apply {
-            findViewById<ImageView>(R.id.filter_enabled).setOnClickListener {
+            setOnLeftItemClickListener {
                 mAdapter.refreshAlarmList(mPresenter.filterEnabledAlarm())
             }
 
-            findViewById<ImageView>(R.id.add_alarm).setOnClickListener {
+            setOnRightItemClickListener {
                 val intent = Intent(this@MainActivity, AddEditAct::class.java)
+                intent.action = AddEditAct.addAction
                 startActivityForResult(intent, addNewAlarmCode)
             }
         }

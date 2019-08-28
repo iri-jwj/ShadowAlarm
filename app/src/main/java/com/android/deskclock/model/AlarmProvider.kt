@@ -3,7 +3,6 @@ package com.android.deskclock.model
 import android.content.ContentProvider
 import android.content.ContentValues
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.UriMatcher
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
@@ -11,10 +10,10 @@ import android.net.Uri
 import android.util.Log
 import com.android.deskclock.model.database.AlarmDatabase
 
-class AlarmProvider(context: Context) : ContentProvider() {
+class AlarmProvider() : ContentProvider() {
     companion object {
-         const val AUTHORITY = "com.android.deskclock.provider"
-         const val PATH = "shadowAlarm"
+        const val AUTHORITY = "com.android.deskclock.provider"
+        const val PATH = "shadowAlarm"
         private const val CODE = 101
 
         fun buildUriMatcher(): UriMatcher {

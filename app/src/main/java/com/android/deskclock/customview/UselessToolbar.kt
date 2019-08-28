@@ -19,6 +19,12 @@ class UselessToolbar : ViewGroup {
     private val rightIcon: Int?
     private val toolbarView: View
 
+    private var leftImageView: ImageView
+    private var rightImageView: ImageView
+    private var titleView: TextView
+    private var leftTextView: TextView
+    private var rightTextView: TextView
+
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -39,30 +45,79 @@ class UselessToolbar : ViewGroup {
         } finally {
             array?.recycle()
         }
-        toolbarView = LayoutInflater.from(context).inflate(R.layout.useless_tool_bar, this)
+        toolbarView = LayoutInflater.from(context).inflate(R.layout.useless_tool_bar, this, false)
+        titleView = toolbarView.findViewById(R.id.toolbar_title)
+        leftTextView = toolbarView.findViewById(R.id.toolbar_left_text)
+        leftImageView = toolbarView.findViewById(R.id.toolbar_image_left)
+        rightTextView = toolbarView.findViewById(R.id.toolbar_right_text)
+        rightImageView = toolbarView.findViewById(R.id.toolbar_image_right)
+
+        addView(toolbarView)
         initToolbarView()
     }
 
     private fun initToolbarView() {
         if (title != null) {
-            toolbarView.findViewById<TextView>(R.id.toolbar_title).text = title
+            titleView.text = title
         }
 
         if (leftText != null) {
-            toolbarView.findViewById<TextView>(R.id.toolbar_left_text).text = leftText
+            leftTextView.text = leftText
         } else if (leftIcon != null) {
-            toolbarView.findViewById<ImageView>(R.id.toolbar_image_left).setImageResource(leftIcon)
+            leftImageView.apply {
+                setImageResource(leftIcon)
+                visibility = View.VISIBLE
+            }
+            leftTextView.visibility = View.GONE
         }
 
         if (rightText != null) {
-            toolbarView.findViewById<TextView>(R.id.toolbar_right_text).text = leftText
+            rightTextView.text = rightText
         } else if (rightIcon != null) {
-            toolbarView.findViewById<ImageView>(R.id.toolbar_image_right)
-                .setImageResource(rightIcon)
+            rightImageView.apply {
+                setImageResource(rightIcon)
+                visibility = View.VISIBLE
+            }
+            rightTextView.visibility = View.GONE
         }
     }
 
+
+    fun setOnLeftItemClickListener(callback: () -> Unit) {
+        if (leftTextView.visibility != View.GONE) {
+            leftTextView.setOnClickListener {
+                callback()
+            }
+        } else if (leftImageView.visibility != View.GONE) {
+            leftImageView.setOnClickListener {
+                callback()
+            }
+        }
+    }
+
+    fun setOnRightItemClickListener(callback: () -> Unit) {
+        if (rightTextView.visibility != View.GONE) {
+            rightTextView.setOnClickListener {
+                callback()
+            }
+        } else if (rightImageView.visibility != View.GONE) {
+            rightImageView.setOnClickListener {
+                callback()
+            }
+        }
+    }
+
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        measureChild(getChildAt(0), widthMeasureSpec, heightMeasureSpec)
+    }
+
+    fun setTitle(title: String) {
+        toolbarView.findViewById<TextView>(R.id.toolbar_title).text = title
+    }
+
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        toolbarView.layout(0, 0, toolbarView.width, toolbarView.height)
+        getChildAt(0).layout(0, 0, getChildAt(0).measuredWidth, getChildAt(0).measuredHeight)
     }
 }

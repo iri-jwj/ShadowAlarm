@@ -7,33 +7,16 @@
     android:background="@color/app_default_background"
     tools:context=".homepage.MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.android.deskclock.customview.UselessToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/app_default_background"
+        android:layout_height="56dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/filter_enabled"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="start"
-            android:scaleType="centerInside"
-            android:src="@drawable/alarm_filter" />
-
-        <ImageView
-            android:id="@+id/add_alarm"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/ex_margin"
-            android:scaleType="centerInside"
-            android:src="@drawable/alarm_add" />
-
-    </androidx.appcompat.widget.Toolbar>
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/app_name"
+        app:left_image="@drawable/alarm_filter"
+        app:right_image="@drawable/alarm_add"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
