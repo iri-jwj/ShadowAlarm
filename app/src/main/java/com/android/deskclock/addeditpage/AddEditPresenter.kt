@@ -39,13 +39,13 @@ class AddEditPresenter(private val action: String) : BasePresenter() {
     private fun getFormattedLabelString(remindDaysInWeek: Int): String {
         val builder = StringBuilder()
         when {
-            remindDaysInWeek.and(0x0111110) == 0x0111110 -> builder.append("每工作日")
-            remindDaysInWeek.and(0x1000001) == 0x1000001 -> builder.append("每周末")
+            remindDaysInWeek == 0b0111110 -> builder.append("每工作日")
+            remindDaysInWeek == 0b1000001 -> builder.append("每周末")
             else -> for (i in 1..7) {
                 var temp = 1
                 temp = temp.shl(i - 1)
                 if (remindDaysInWeek.and(temp) == temp) {
-                    builder.append(getTargetWeekDay(temp))
+                    builder.append(getTargetWeekDay(i))
                     builder.append(" ")
                 }
             }

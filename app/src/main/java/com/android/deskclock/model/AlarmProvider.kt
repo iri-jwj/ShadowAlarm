@@ -23,7 +23,7 @@ class AlarmProvider() : ContentProvider() {
         }
     }
 
-    private var mDatabase: AlarmDatabase = AlarmDatabase(context)
+    private lateinit var mDatabase: AlarmDatabase
     private var writableDb: SQLiteDatabase? = null
 
     override fun insert(p0: Uri, p1: ContentValues?): Uri? {
@@ -70,6 +70,7 @@ class AlarmProvider() : ContentProvider() {
     }
 
     override fun onCreate(): Boolean {
+        mDatabase = AlarmDatabase(context)
         return true
     }
 

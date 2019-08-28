@@ -16,7 +16,7 @@ class HomePagePresenter(private val context: Context):BasePresenter() {
 
     private val tag = "HomePagePresenter"
 
-    private val uri = Uri.parse("${AlarmProvider.AUTHORITY}/${AlarmProvider.PATH}")
+    private val uri = Uri.parse("content://${AlarmProvider.AUTHORITY}/${AlarmProvider.PATH}")
     private val resolver = context.contentResolver
 
     private lateinit var alarmList:List<ShadowAlarm>
