@@ -20,7 +20,7 @@ object AlarmManagerUtil {
     private lateinit var mAlarmManager: AlarmManager
     private const val EVERYDAY: Int = 0x1111111
 
-    fun setUpWithContext(context: Context):AlarmManagerUtil {
+    fun setUpWithContext(context: Context): AlarmManagerUtil {
         mContext = context.applicationContext
         initData()
         return this
@@ -37,27 +37,50 @@ object AlarmManagerUtil {
     fun updateAlarm(old: ShadowAlarm, new: ShadowAlarm) {
         val oldFlags = old.remindDaysInWeek
         val newFlags = new.remindDaysInWeek
-        if (oldFlags != newFlags) {
-            val resultFlags = calUpdatedFlags(oldFlags, newFlags)
+        var needReplace = false
+        if (old.label != new.label ||
+            old.remindHours != new.remindHours ||
+            old.remindMinutes != new.remindMinutes
+        ) {
+            needReplace = true
+        }
 
+        var resultFlags: IntArray? = null
+
+        if (oldFlags != newFlags) {
+            resultFlags = calUpdatedFlags(oldFlags, newFlags)
+            needReplace = true
+        }
+
+        if (needReplace && resultFlags == null) {
             when {
-                old.isEnabled == new.isEnabled -> {
+                old.isEnabled == new.isEnabled && old.isEnabled -> {
+                    cancelAlarm(old)
+                    setAlarm(new)
+                }
+                old.isEnabled -> {
+                    cancelAlarm(old)
+                }
+                new.isEnabled -> setAlarm(new)
+            }
+        } else if (needReplace && resultFlags != null) {
+            when {
+                old.isEnabled == new.isEnabled && old.isEnabled -> {
                     cancelAlarm(old.id.hashCode(), resultFlags[1])
                     setUpAlarms(
                         new.id.hashCode(),
                         new.label,
                         new.remindHours,
                         new.remindMinutes,
-                        resultFlags[1]
+                        resultFlags[0]
                     )
                 }
                 old.isEnabled -> {
                     cancelAlarm(old)
                 }
-                else -> setAlarm(new)
+                new.isEnabled -> setAlarm(new)
             }
         }
-
     }
 
     private fun calUpdatedFlags(oldFlags: Int, newFlags: Int): IntArray {
@@ -110,7 +133,7 @@ object AlarmManagerUtil {
     fun setAlarm(model: ShadowAlarm) {
         val id = model.id.hashCode()
         setUpAlarms(id, model.label, model.remindHours, model.remindMinutes, model.remindDaysInWeek)
-        Log.d(TAG,"in set Alarm")
+        Log.d(TAG, "in set Alarm")
     }
 
     private fun setUpAlarms(id: Int, label: String, hour: Int, minutes: Int, remindFlags: Int) {
@@ -124,7 +147,7 @@ object AlarmManagerUtil {
             ((calendar[Calendar.HOUR_OF_DAY] == hour) and (calendar[Calendar.MINUTE] > minutes))
         ) {
             calendar.add(Calendar.DAY_OF_MONTH, 1)
-            Log.d(TAG,"add one day")
+            Log.d(TAG, "add one day")
         }
 
         calendar.set(
@@ -136,13 +159,16 @@ object AlarmManagerUtil {
             0
         )
 
-        Log.d(TAG,"${calendar[Calendar.HOUR_OF_DAY]}  ${calendar[Calendar.MINUTE]}")
+        Log.d(TAG, "${calendar[Calendar.HOUR_OF_DAY]}  ${calendar[Calendar.MINUTE]}")
 
         if (remindFlags == 0) {
             val pendingIntent =
                 PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_IMMUTABLE)
             mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-            Log.d(TAG,"in set once alarm time = ${calendar.timeInMillis - System.currentTimeMillis()}")
+            Log.d(
+                TAG,
+                "in set once alarm time = ${calendar.timeInMillis - System.currentTimeMillis()}"
+            )
         } else {
             if (remindFlags == EVERYDAY) {
                 val pendingIntent =
@@ -158,7 +184,7 @@ object AlarmManagerUtil {
                     24 * 60 * 60 * 1000,
                     pendingIntent
                 )
-                Log.d(TAG,"in set repeat alarm")
+                Log.d(TAG, "in set repeat alarm")
 
             } else {
                 for (i in 1..7) {
@@ -181,7 +207,7 @@ object AlarmManagerUtil {
                         )
                     }
                 }
-                Log.d(TAG,"in set repeat alarm")
+                Log.d(TAG, "in set repeat alarm")
 
 
             }
