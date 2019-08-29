@@ -12,14 +12,14 @@ import com.android.deskclock.util.AlarmManagerUtil
 import java.util.*
 import kotlin.collections.ArrayList
 
-class HomePagePresenter(private val context: Context):BasePresenter() {
+class HomePagePresenter(private val context: Context) : BasePresenter() {
 
     private val tag = "HomePagePresenter"
 
     private val uri = Uri.parse("content://${AlarmProvider.AUTHORITY}/${AlarmProvider.PATH}")
     private val resolver = context.contentResolver
 
-    private lateinit var alarmList:List<ShadowAlarm>
+    private lateinit var alarmList: List<ShadowAlarm>
 
     private var isFiltered = false
 
@@ -28,48 +28,53 @@ class HomePagePresenter(private val context: Context):BasePresenter() {
         sortAlarmList()
     }
 
-    fun deleteAlarm(shadowAlarm: ShadowAlarm):List<ShadowAlarm>{
-        val result = resolver.delete(uri,"id = ?", arrayOf(shadowAlarm.id.toString()))
-        if (result != 0){
-            Log.d(tag,"delete target target=${shadowAlarm.id}")
+    fun deleteAlarm(shadowAlarm: ShadowAlarm): List<ShadowAlarm> {
+        val result = resolver.delete(uri, "id = ?", arrayOf(shadowAlarm.id.toString()))
+        if (result != 0) {
+            Log.d(tag, "delete target target=${shadowAlarm.id}")
             (alarmList as ArrayList).remove(shadowAlarm)
-        }else{
-            Log.d(tag,"delete failed")
+        } else {
+            Log.d(tag, "delete failed")
         }
-        if (shadowAlarm.isEnabled){
+        if (shadowAlarm.isEnabled) {
             AlarmManagerUtil.cancelAlarm(shadowAlarm)
         }
 
         return alarmList
     }
 
-    fun updateAlarm(shadowAlarm: ShadowAlarm):List<ShadowAlarm>{
+    fun updateAlarm(shadowAlarm: ShadowAlarm): List<ShadowAlarm> {
 
-        val result = resolver.update(uri,buildContentValues(shadowAlarm),"id = ?", arrayOf(shadowAlarm.id.toString()))
-        if (result > 0){
+        val result = resolver.update(
+            uri,
+            buildContentValues(shadowAlarm),
+            "id = ?",
+            arrayOf(shadowAlarm.id.toString())
+        )
+        if (result > 0) {
             val old = alarmList.find {
-                shadowAlarm.id==it.id
+                shadowAlarm.id == it.id
             }
             (alarmList as ArrayList).remove(old)
             (alarmList as ArrayList).add(shadowAlarm)
             sortAlarmList()
-            AlarmManagerUtil.updateAlarm(old!!,shadowAlarm)
+            AlarmManagerUtil.updateAlarm(old!!, shadowAlarm)
         }
         return alarmList
     }
 
-    fun addAlarm(shadowAlarm: ShadowAlarm):List<ShadowAlarm>{
-        resolver.insert(uri,buildContentValues(shadowAlarm))
+    fun addAlarm(shadowAlarm: ShadowAlarm): List<ShadowAlarm> {
+        resolver.insert(uri, buildContentValues(shadowAlarm))
         (alarmList as ArrayList).add(shadowAlarm)
         sortAlarmList()
         AlarmManagerUtil.setAlarm(shadowAlarm)
         return alarmList
     }
 
-    fun filterEnabledAlarm():List<ShadowAlarm>{
-        val result =  if(isFiltered)alarmList.filter {
+    fun filterEnabledAlarm(): List<ShadowAlarm> {
+        val result = if (isFiltered) alarmList.filter {
             it.isEnabled
-        }else{
+        } else {
             alarmList
         }
         isFiltered = !isFiltered
@@ -77,21 +82,25 @@ class HomePagePresenter(private val context: Context):BasePresenter() {
     }
 
     private fun sortAlarmList() {
-        alarmList.sortedWith(compareBy({it.remindHours},{it.remindMinutes}))
+        val list = alarmList.sortedWith(compareBy({ it.remindHours }, { it.remindMinutes }))
+        (alarmList as ArrayList).clear()
+        list.forEach {
+            (alarmList as ArrayList).add(it)
+        }
     }
 
     private fun queryAlarms(): List<ShadowAlarm> {
         val tempList = ArrayList<ShadowAlarm>()
-        val cursor = resolver.query(uri,null,null,null,null,null)
-        if (cursor!=null){
-            while (cursor.moveToNext()){
+        val cursor = resolver.query(uri, null, null, null, null, null)
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
                 val alarm = ShadowAlarm(
                     UUID.fromString(cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ID))),
                     cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK)),
-                    cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED))==1
+                    cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)) == 1
                 )
                 tempList.add(alarm)
             }
@@ -101,16 +110,23 @@ class HomePagePresenter(private val context: Context):BasePresenter() {
         return tempList
     }
 
-    private fun buildContentValues(shadowAlarm: ShadowAlarm):ContentValues{
+    private fun buildContentValues(shadowAlarm: ShadowAlarm): ContentValues {
         val values = ContentValues()
         values.apply {
-            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ID,shadowAlarm.id.toString())
-            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL,shadowAlarm.label)
-            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR,shadowAlarm.remindHours)
-            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE,shadowAlarm.remindMinutes)
-            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK,shadowAlarm.remindDaysInWeek)
-            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED,shadowAlarm.isEnabled)
+            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ID, shadowAlarm.id.toString())
+            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL, shadowAlarm.label)
+            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR, shadowAlarm.remindHours)
+            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE, shadowAlarm.remindMinutes)
+            put(
+                AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK,
+                shadowAlarm.remindDaysInWeek
+            )
+            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED, shadowAlarm.isEnabled)
         }
         return values
+    }
+
+    fun getAlarmList(): List<ShadowAlarm> {
+        return alarmList
     }
 }

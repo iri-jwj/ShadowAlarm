@@ -109,4 +109,12 @@ class AddEditPresenter(private val action: String) : BasePresenter() {
     fun saveNewEditRepeat(repeat: Int) {
         mAlarm.remindDaysInWeek = repeat
     }
+
+    fun saveNewEditedLabel(label: String) {
+        mAlarm.label = label
+    }
+
+    fun getRemindDaysInWeek(): Int {
+        return mAlarm.remindDaysInWeek
+    }
 }

@@ -10,7 +10,7 @@ import android.net.Uri
 import android.util.Log
 import com.android.deskclock.model.database.AlarmDatabase
 
-class AlarmProvider() : ContentProvider() {
+class AlarmProvider : ContentProvider() {
     companion object {
         const val AUTHORITY = "com.android.deskclock.provider"
         const val PATH = "shadowAlarm"
@@ -27,14 +27,20 @@ class AlarmProvider() : ContentProvider() {
     private var writableDb: SQLiteDatabase? = null
 
     override fun insert(p0: Uri, p1: ContentValues?): Uri? {
-        if (isMatchedUri(p0)) {
-            writableDb = mDatabase.writableDatabase
-            writableDb?.beginTransaction()
-            writableDb?.insert(AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME, null, p1)
-            writableDb?.setTransactionSuccessful()
-            writableDb?.close()
+        synchronized(mDatabase) {
+            if (isMatchedUri(p0)) {
+                try {
+                    writableDb = mDatabase.writableDatabase
+                    writableDb?.beginTransaction()
+                    writableDb?.insert(AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME, null, p1)
+                    writableDb?.setTransactionSuccessful()
+                    writableDb?.endTransaction()
+                } finally {
+                    writableDb?.close()
+                }
+            }
+            return null
         }
-        return null
     }
 
     override fun query(
@@ -44,70 +50,93 @@ class AlarmProvider() : ContentProvider() {
         p3: Array<out String>?,
         p4: String?
     ): Cursor? {
-        if (isMatchedUri(p0)) {
-            writableDb = mDatabase.writableDatabase
-            writableDb?.beginTransaction()
-            val cursor = writableDb?.query(
-                AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR + " ," + AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE + " ASC"
-            )
-            writableDb?.setTransactionSuccessful()
-            return if (cursor?.count != 0) {
-                cursor
-            } else {
-                Log.d(TAG, "it seems no alarm has added")
-                null
-            }
+        synchronized(mDatabase) {
+            if (isMatchedUri(p0)) {
+                try {
+                    writableDb = mDatabase.readableDatabase
+                    writableDb?.beginTransaction()
+                    val cursor = writableDb?.query(
+                        AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR + " ," + AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE + " ASC"
+                    )
+                    writableDb?.setTransactionSuccessful()
 
-        } else {
+                    val result: Cursor?
+                    if (cursor?.count != 0) {
+                        result = cursor!!
+                    } else {
+                        result = null
+                        cursor.close()
+                    }
+                    writableDb?.endTransaction()
+
+                    return result
+                } finally {
+                    writableDb?.close()
+                }
+            } else {
             return null
+            }
         }
     }
 
     override fun onCreate(): Boolean {
-        mDatabase = AlarmDatabase(context)
+        mDatabase = AlarmDatabase.getInstance(context)
         return true
     }
 
     override fun update(p0: Uri, p1: ContentValues?, p2: String?, p3: Array<out String>?): Int {
-        var result: Int? = 0
-        if (isMatchedUri(p0)) {
-            writableDb = mDatabase.writableDatabase
-            writableDb?.beginTransaction()
-            result = writableDb?.update(
-                AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME, p1, p2,
-                p3
-            )
+        synchronized(mDatabase) {
+            var result: Int? = 0
+            if (isMatchedUri(p0)) {
+                try {
+                    writableDb = mDatabase.writableDatabase
+                    writableDb?.beginTransaction()
+                    result = writableDb?.update(
+                        AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME, p1, p2,
+                        p3
+                    )
+                    writableDb?.setTransactionSuccessful()
+                    writableDb?.endTransaction()
 
-            writableDb?.setTransactionSuccessful()
-
-            writableDb?.close()
+                } finally {
+                    writableDb?.close()
+                }
+            }
+            return result!!
         }
-        return result!!
     }
 
     override fun delete(p0: Uri, p1: String?, p2: Array<out String>?): Int {
-        var result: Int? = 0
-        if (isMatchedUri(p0)) {
-            writableDb = mDatabase.writableDatabase
-            writableDb?.beginTransaction()
-            result = writableDb?.delete(
-                AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME,
-                p1,
-                p2
-            )
-            writableDb?.setTransactionSuccessful()
-            if (result != 0) {
-                Log.d(TAG, "delete alarm id =$p1 success")
+        synchronized(mDatabase) {
+            var result: Int? = 0
+            if (isMatchedUri(p0)) {
+                try {
+                    writableDb = mDatabase.writableDatabase
+                    writableDb?.beginTransaction()
+                    result = writableDb?.delete(
+                        AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME,
+                        p1,
+                        p2
+                    )
+
+                    if (result != 0) {
+                        Log.d(TAG, "delete alarm id =$p1 success")
+                    }
+                    writableDb?.setTransactionSuccessful()
+                    writableDb?.endTransaction()
+
+                } finally {
+                    writableDb?.close()
+                }
             }
-            writableDb?.close()
+            return result!!
         }
-        return result!!
     }
 
     private fun isMatchedUri(uri: Uri): Boolean {

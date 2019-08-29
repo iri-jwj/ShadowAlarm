@@ -11,38 +11,40 @@ import androidx.fragment.app.FragmentManager
 import com.android.deskclock.R
 import com.android.deskclock.customview.UselessToolbar
 
-class SelectRepeatFragment : Fragment() {
+class SelectRepeatFragment(private val hasSelectedDays: Int) : Fragment() {
 
-    companion object{
-        private val instance = SelectRepeatFragment()
+    companion object {
+        private lateinit var instance: SelectRepeatFragment
         private lateinit var mManager: FragmentManager
-        private lateinit var selectDayCallback:(Int)->Unit
+        private lateinit var selectDayCallback: (Int) -> Unit
+        private var oldDays: Int = 0
 
-        fun setUpFragment(manager:FragmentManager,container:Int,
-                          callback:(Int)->Unit){
+        fun setUpFragment(
+            manager: FragmentManager, container: Int, selectedDays: Int,
+            callback: (Int) -> Unit
+        ) {
+            oldDays = selectedDays
             mManager = manager
             selectDayCallback = callback
-            val transaction = mManager.beginTransaction()
-            if (!mManager.fragments.contains(instance)){
-                transaction.add(container,instance,AddEditAct.selectRepeatTag).commit()
-            }else{
-                transaction.show(instance).commit()
-            }
+            instance = SelectRepeatFragment(selectedDays)
+            mManager.beginTransaction().add(container, instance, AddEditAct.selectRepeatTag)
+                .commit()
+
 
         }
 
-        private fun hideSelf(result : Int){
+        private fun hideSelf(result: Int) {
             selectDayCallback(result)
-            mManager.beginTransaction().hide(instance).commit()
+            mManager.beginTransaction().remove(instance).commit()
         }
     }
 
-    private var selectedDay = 0b0000000
+    private var selectedDay = hasSelectedDays
     private val checkedList = ArrayList<Boolean>(7)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        for (i in 0..6){
+        for (i in 0..6) {
             checkedList.add(false)
         }
     }
@@ -57,13 +59,16 @@ class SelectRepeatFragment : Fragment() {
         view.findViewById<UselessToolbar>(R.id.toolbar).setOnLeftItemClickListener {
             hideSelf(selectedDay)
         }
+
+        handelHasSelectedDays(view)
+
         view.apply {
             findViewById<RelativeLayout>(R.id.select_monday).setOnClickListener {
                 val temp = 0b0000010
-                if (checkedList[1]){
+                if (checkedList[1]) {
                     selectedDay = selectedDay.and(temp.inv())
                     findViewById<ImageView>(R.id.weekday_selected_mon).visibility = View.GONE
-                }else{
+                } else {
                     selectedDay = selectedDay.or(temp)
                     findViewById<ImageView>(R.id.weekday_selected_mon).visibility = View.VISIBLE
                 }
@@ -72,10 +77,10 @@ class SelectRepeatFragment : Fragment() {
             }
             findViewById<RelativeLayout>(R.id.select_tuesday).setOnClickListener {
                 val temp = 0b0000100
-                if (checkedList[2]){
+                if (checkedList[2]) {
                     selectedDay = selectedDay.and(temp.inv())
                     findViewById<ImageView>(R.id.weekday_selected_tues).visibility = View.GONE
-                }else{
+                } else {
                     selectedDay = selectedDay.or(temp)
                     findViewById<ImageView>(R.id.weekday_selected_tues).visibility = View.VISIBLE
                 }
@@ -84,10 +89,10 @@ class SelectRepeatFragment : Fragment() {
             }
             findViewById<RelativeLayout>(R.id.select_wednesday).setOnClickListener {
                 val temp = 0b0001000
-                if (checkedList[3]){
+                if (checkedList[3]) {
                     selectedDay = selectedDay.and(temp.inv())
                     findViewById<ImageView>(R.id.weekday_selected_wed).visibility = View.GONE
-                }else{
+                } else {
                     selectedDay = selectedDay.or(temp)
                     findViewById<ImageView>(R.id.weekday_selected_wed).visibility = View.VISIBLE
                 }
@@ -96,11 +101,11 @@ class SelectRepeatFragment : Fragment() {
             }
             findViewById<RelativeLayout>(R.id.select_thursday).setOnClickListener {
                 val temp = 0b0010000
-                if (checkedList[4]){
+                if (checkedList[4]) {
                     selectedDay = selectedDay.and(temp.inv())
                     findViewById<ImageView>(R.id.weekday_selected_thur).visibility = View.GONE
-                }else{
-                    selectedDay =  selectedDay.or(temp)
+                } else {
+                    selectedDay = selectedDay.or(temp)
                     findViewById<ImageView>(R.id.weekday_selected_thur).visibility = View.VISIBLE
                 }
                 checkedList[4] = !checkedList[4]
@@ -108,10 +113,10 @@ class SelectRepeatFragment : Fragment() {
             }
             findViewById<RelativeLayout>(R.id.select_friday).setOnClickListener {
                 val temp = 0b0100000
-                if (checkedList[5]){
+                if (checkedList[5]) {
                     selectedDay = selectedDay.and(temp.inv())
                     findViewById<ImageView>(R.id.weekday_selected_fri).visibility = View.GONE
-                }else{
+                } else {
                     selectedDay = selectedDay.or(temp)
                     findViewById<ImageView>(R.id.weekday_selected_fri).visibility = View.VISIBLE
                 }
@@ -120,10 +125,10 @@ class SelectRepeatFragment : Fragment() {
             }
             findViewById<RelativeLayout>(R.id.select_saturday).setOnClickListener {
                 val temp = 0b1000000
-                if (checkedList[6]){
+                if (checkedList[6]) {
                     selectedDay = selectedDay.and(temp.inv())
                     findViewById<ImageView>(R.id.weekday_selected_sat).visibility = View.GONE
-                }else{
+                } else {
                     selectedDay = selectedDay.or(temp)
                     findViewById<ImageView>(R.id.weekday_selected_sat).visibility = View.VISIBLE
                 }
@@ -132,10 +137,10 @@ class SelectRepeatFragment : Fragment() {
             }
             findViewById<RelativeLayout>(R.id.select_sunday).setOnClickListener {
                 val temp = 0b0000001
-                if (checkedList[0]){
+                if (checkedList[0]) {
                     selectedDay = selectedDay.and(temp.inv())
                     findViewById<ImageView>(R.id.weekday_selected_sun).visibility = View.GONE
-                }else{
+                } else {
                     selectedDay = selectedDay.or(temp)
                     findViewById<ImageView>(R.id.weekday_selected_sun).visibility = View.VISIBLE
                 }
@@ -145,4 +150,47 @@ class SelectRepeatFragment : Fragment() {
         }
         return view
     }
+
+    private fun handelHasSelectedDays(view: View?) {
+        for (i in 0..6) {
+            var temp = 1
+            temp = temp.shl(i)
+            if (hasSelectedDays.and(temp) == temp) {
+                checkedList[i] = true
+                showTargetCheckedImage(view, i)
+            }
+        }
+    }
+
+    private fun showTargetCheckedImage(view: View?, i: Int) {
+        when (i + 1) {
+            1 -> {
+                view?.findViewById<ImageView>(R.id.weekday_selected_sun)?.visibility = View.VISIBLE
+            }
+            2 -> {
+                view?.findViewById<ImageView>(R.id.weekday_selected_mon)?.visibility = View.VISIBLE
+
+            }
+            3 -> {
+                view?.findViewById<ImageView>(R.id.weekday_selected_tues)?.visibility = View.VISIBLE
+            }
+            4 -> {
+                view?.findViewById<ImageView>(R.id.weekday_selected_wed)?.visibility = View.VISIBLE
+            }
+            5 -> {
+                view?.findViewById<ImageView>(R.id.weekday_selected_thur)?.visibility = View.VISIBLE
+            }
+            6 -> {
+                view?.findViewById<ImageView>(R.id.weekday_selected_fri)?.visibility = View.VISIBLE
+            }
+            7 -> {
+                view?.findViewById<ImageView>(R.id.weekday_selected_sat)?.visibility = View.VISIBLE
+            }
+            else -> {
+                //do nothing
+            }
+        }
+    }
+
+
 }

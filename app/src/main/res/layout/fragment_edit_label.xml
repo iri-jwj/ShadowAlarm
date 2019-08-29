@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lock_screen_alarm_dark"
+    android:clickable="true"
     android:orientation="vertical">
 
     <com.android.deskclock.customview.UselessToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         app:layout_constraintTop_toTopOf="parent"
         app:left_text="@string/select_back"
         app:title="@string/add_edit_label" />

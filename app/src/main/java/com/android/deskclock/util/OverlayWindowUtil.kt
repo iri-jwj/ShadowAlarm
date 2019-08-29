@@ -1,7 +1,10 @@
 package com.android.deskclock.util
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Build
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.Button
@@ -27,32 +30,46 @@ class OverlayWindowUtil(
     }
 
     fun showFloatingView() {
-        val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.overlay_window_alarm, null)
-        val windowManager =
-            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+        if (Settings.canDrawOverlays(context)) {
+            val inflater = LayoutInflater.from(context)
+            val view = inflater.inflate(R.layout.overlay_window_alarm, null)
+            val windowManager =
+                (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
 
-        view.apply {
-            findViewById<TextView>(R.id.overlay_label).text = message
-            findViewById<TextView>(R.id.overlay_title).text = title
+            view.apply {
+                findViewById<TextView>(R.id.overlay_label).text = message
+                findViewById<TextView>(R.id.overlay_title).text = title
 
-            findViewById<Button>(R.id.overlay_positive).setOnClickListener {
-                onPositiveClicked.invoke()
-                windowManager.removeView(view)
+                findViewById<Button>(R.id.overlay_positive).setOnClickListener {
+                    onPositiveClicked.invoke()
+                    windowManager.removeView(view)
+                }
+
+                findViewById<Button>(R.id.overlay_negative).setOnClickListener {
+                    onNegativeClicked.invoke()
+                    windowManager.removeView(view)
+                }
             }
 
-            findViewById<Button>(R.id.overlay_negative).setOnClickListener {
-                onNegativeClicked.invoke()
-                windowManager.removeView(view)
-            }
+            val layoutParams = buildLayoutParams(WindowManager.LayoutParams())
+
+            windowManager.addView(
+                view,
+                layoutParams
+            )
+        } else {
+            tipRequestPermission()
         }
+    }
 
-        val layoutParams = buildLayoutParams(WindowManager.LayoutParams())
-
-        windowManager.addView(
-            view,
-            layoutParams
-        )
+    private fun tipRequestPermission() {
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setTitle("请求权限")
+            .setMessage("请求打开悬浮窗权限")
+            .setPositiveButton("去打开") { _, _ ->
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                context.startActivity(intent)
+            }.create().show()
     }
 
 

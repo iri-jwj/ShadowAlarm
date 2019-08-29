@@ -57,12 +57,19 @@ class AlarmsAdapter(private val activity: Activity) :
         holder.getLabelTextView().text =
             getFormattedLabelString(alarm.label, alarm.remindDaysInWeek)
 
+        holder.getSwitchButton().setOnCheckedChangeListener{_,_->
+
+        }
+
+        holder.getSwitchButton().isChecked = alarm.isEnabled
+
         holder.getSwitchButton().setOnCheckedChangeListener { _, isChecked ->
             onCheckedChangeCallback(isChecked, alarm)
         }
 
         holder.itemView.setOnClickListener {
             val intent = Intent(activity, AddEditAct::class.java)
+            intent.action = AddEditAct.editAction
             intent.putExtra("alarm", alarm)
             activity.startActivityForResult(intent, MainActivity.editAlarmCode)
         }
@@ -74,7 +81,7 @@ class AlarmsAdapter(private val activity: Activity) :
                 "confirm to delete ${alarm.label}?"
             ).setOnPositiveClicked {
                 onItemDeleteCallback(alarm)
-            }
+            }.showFloatingView()
             true
         }
     }
@@ -83,13 +90,13 @@ class AlarmsAdapter(private val activity: Activity) :
         val builder = StringBuilder()
         builder.append(label)
         when {
-            remindDaysInWeek.and(0x0111110) == 0x0111110 -> builder.append(", 每工作日")
-            remindDaysInWeek.and(0x1000001) == 0x1000001 -> builder.append(", 每周末")
+            remindDaysInWeek == 0b0111110 -> builder.append(", 每工作日")
+            remindDaysInWeek == 0b1000001 -> builder.append(", 每周末")
             else -> for (i in 1..7) {
                 var temp = 1
                 temp = temp.shl(i - 1)
                 if (remindDaysInWeek.and(temp) == temp) {
-                    builder.append(getTargetWeekDay(temp))
+                    builder.append(getTargetWeekDay(i))
                     builder.append(" ")
                 }
             }

@@ -9,7 +9,16 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     private static final String DatabaseName = "AlarmDatabase.db";
     private static final int version = 1;
 
-    public AlarmDatabase(Context context) {
+    private static AlarmDatabase instance = null;
+
+    public static AlarmDatabase getInstance(Context context) {
+        if (instance == null) {
+            instance = new AlarmDatabase(context);
+        }
+        return instance;
+    }
+
+    private AlarmDatabase(Context context) {
         this(context, DatabaseName, null, version);
     }
 

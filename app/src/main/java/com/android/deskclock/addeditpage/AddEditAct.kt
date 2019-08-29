@@ -84,7 +84,7 @@ class AddEditAct : BaseView<AddEditPresenter>() {
         }
     }
 
-    private fun initView(){
+    private fun initView() {
         findViewById<NumberPicker>(R.id.number_picker_hour).apply {
             setFormatter {
                 var tmpStr = it.toString()
@@ -129,17 +129,28 @@ class AddEditAct : BaseView<AddEditPresenter>() {
         findViewById<TextView>(R.id.add_edit_label).text = presenter.getNewAlarmLabel()
 
         findViewById<ViewGroup>(R.id.add_edit_label_layout).setOnClickListener {
-
+            EditLabelFragment.setUpFragment(
+                supportFragmentManager,
+                R.id.container,
+                presenter.getNewAlarmLabel()
+            ) {
+                handelNewLabel(it)
+            }
         }
 
         findViewById<ViewGroup>(R.id.add_edit_repeat_layout).setOnClickListener {
-            SelectRepeatFragment.setUpFragment(supportFragmentManager,R.id.container){
+            SelectRepeatFragment.setUpFragment(supportFragmentManager, R.id.container,presenter.getRemindDaysInWeek()) {
                 handelNewRepeat(it)
             }
         }
     }
 
-    private fun handelNewRepeat(repeat:Int){
+    private fun handelNewLabel(label: String) {
+        presenter.saveNewEditedLabel(label)
+        findViewById<TextView>(R.id.add_edit_label).text = presenter.getNewAlarmLabel()
+    }
+
+    private fun handelNewRepeat(repeat: Int) {
         presenter.saveNewEditRepeat(repeat)
         findViewById<TextView>(R.id.add_edit_repeat).text = presenter.getRepeatDays()
     }

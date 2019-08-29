@@ -11,6 +11,7 @@ import com.android.deskclock.R
 import com.android.deskclock.addeditpage.AddEditAct
 import com.android.deskclock.customview.UselessToolbar
 import com.android.deskclock.model.ShadowAlarm
+import com.android.deskclock.util.AlarmManagerUtil
 
 class MainActivity : BaseView<HomePagePresenter>() {
     companion object {
@@ -24,6 +25,7 @@ class MainActivity : BaseView<HomePagePresenter>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        AlarmManagerUtil.setUpWithContext(this)
         mPresenter = HomePagePresenter(this)
         mPresenter.start()
 
@@ -50,6 +52,7 @@ class MainActivity : BaseView<HomePagePresenter>() {
             setOnItemDeleteCallback {
                 mAdapter.refreshAlarmList(mPresenter.deleteAlarm(it))
             }
+            refreshAlarmList(mPresenter.getAlarmList())
         }
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
@@ -75,8 +78,10 @@ class MainActivity : BaseView<HomePagePresenter>() {
             when (requestCode) {
                 addNewAlarmCode -> {
                     val alarm = data?.getParcelableExtra<ShadowAlarm>("alarm")
-                    if (alarm != null)
-                        mAdapter.refreshAlarmList(mPresenter.addAlarm(alarm))
+                    if (alarm != null){
+                            mAdapter.refreshAlarmList(mPresenter.addAlarm(alarm))
+                    }
+
                 }
 
                 editAlarmCode -> {
