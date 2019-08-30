@@ -103,6 +103,9 @@ class AddEditPresenter(private val action: String) : BasePresenter() {
     }
 
     fun getResultAlarm(): ShadowAlarm {
+        if (!mAlarm.isEnabled) {
+            mAlarm.isEnabled = true
+        }
         return mAlarm
     }
 

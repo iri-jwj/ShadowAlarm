@@ -59,7 +59,7 @@ class MainActivity : BaseView<HomePagePresenter>() {
             setOnCheckedChangeCallback { b, shadowAlarm ->
                 if (b != shadowAlarm.isEnabled) {
                     shadowAlarm.isEnabled = b
-                    mAdapter.refreshAlarmList(mPresenter.updateAlarm(shadowAlarm))
+                    mAdapter.refreshAlarmList(mPresenter.updateAlarm(shadowAlarm,true))
                 }
             }
             setOnItemDeleteCallback {
@@ -100,7 +100,7 @@ class MainActivity : BaseView<HomePagePresenter>() {
                 editAlarmCode -> {
                     val alarm = data?.getParcelableExtra<ShadowAlarm>("alarm")
                     if (alarm != null)
-                        mAdapter.refreshAlarmList(mPresenter.updateAlarm(alarm))
+                        mAdapter.refreshAlarmList(mPresenter.updateAlarm(alarm,false))
                 }
             }
         }

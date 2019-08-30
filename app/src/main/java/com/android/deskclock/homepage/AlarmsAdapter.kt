@@ -2,6 +2,7 @@ package com.android.deskclock.homepage
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Switch
@@ -49,7 +50,9 @@ class AlarmsAdapter(private val activity: Activity) :
     }
 
     override fun onBindViewHolder(holder: AlarmViewHolder, position: Int) {
+
         val alarm = alarmList!![position]
+        Log.d("AlarmAdapter","position:$position + id=${alarm.id} + ")
 
         holder.getClockTimeTextView().text =
             getFormattedTimeString(alarm.remindHours, alarm.remindMinutes)
@@ -64,6 +67,7 @@ class AlarmsAdapter(private val activity: Activity) :
         holder.getSwitchButton().isChecked = alarm.isEnabled
 
         holder.getSwitchButton().setOnCheckedChangeListener { _, isChecked ->
+            Log.d("AlarmAdapter","position:$position + id=${alarm.id} + ")
             onCheckedChangeCallback(isChecked, alarm)
         }
 

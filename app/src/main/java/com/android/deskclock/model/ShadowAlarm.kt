@@ -11,7 +11,7 @@ data class ShadowAlarm(
     var remindMinutes: Int,
     var remindDaysInWeek: Int,
     var isEnabled: Boolean
-):Parcelable{
+) : Cloneable, Parcelable {
 
     constructor(parcel: Parcel) : this(
         UUID.fromString(parcel.readString()),
@@ -24,9 +24,9 @@ data class ShadowAlarm(
     }
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        val enabled = if (isEnabled){
+        val enabled = if (isEnabled) {
             1
-        }else{
+        } else {
             0
         }
         dest?.apply {
@@ -53,5 +53,13 @@ data class ShadowAlarm(
         }
     }
 
+    override fun clone(): ShadowAlarm {
+        val newId = UUID.fromString(id.toString())
+        val newLabel = String(label.toCharArray())
+        return ShadowAlarm(newId, newLabel, remindHours, remindMinutes, remindDaysInWeek, isEnabled)
+    }
 
+    fun getNewCopy(): ShadowAlarm {
+        return clone()
+    }
 }

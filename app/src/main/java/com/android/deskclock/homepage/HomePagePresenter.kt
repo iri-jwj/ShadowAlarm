@@ -43,7 +43,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
         return alarmList
     }
 
-    fun updateAlarm(shadowAlarm: ShadowAlarm): List<ShadowAlarm> {
+    fun updateAlarm(shadowAlarm: ShadowAlarm, checkedClick: Boolean): List<ShadowAlarm> {
 
         val result = resolver.update(
             uri,
@@ -55,10 +55,18 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
             val old = alarmList.find {
                 shadowAlarm.id == it.id
             }
-            (alarmList as ArrayList).remove(old)
-            (alarmList as ArrayList).add(shadowAlarm)
-            sortAlarmList()
-            AlarmManagerUtil.updateAlarm(old!!, shadowAlarm)
+            val oldCopy = old!!.getNewCopy()
+            old.apply {
+                remindHours = shadowAlarm.remindHours
+                remindMinutes = shadowAlarm.remindMinutes
+                remindDaysInWeek = shadowAlarm.remindDaysInWeek
+                label = shadowAlarm.label
+                isEnabled = shadowAlarm.isEnabled
+            }
+            if (!checkedClick) {
+                sortAlarmList()
+            }
+            AlarmManagerUtil.updateAlarm(oldCopy, shadowAlarm)
         }
         return alarmList
     }
