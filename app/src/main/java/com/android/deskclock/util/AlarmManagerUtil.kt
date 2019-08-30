@@ -8,6 +8,7 @@ import android.content.Intent
 import android.util.Log
 import com.android.deskclock.model.ShadowAlarm
 import java.util.*
+import kotlin.math.abs
 
 @SuppressLint("StaticFieldLeak")
 object AlarmManagerUtil {
@@ -31,7 +32,7 @@ object AlarmManagerUtil {
     }
 
     fun cancelAlarm(alarm: ShadowAlarm) {
-        cancelAlarm(alarm.id.hashCode(), alarm.remindDaysInWeek)
+        cancelAlarm(abs(alarm.id.hashCode()), alarm.remindDaysInWeek)
     }
 
     fun updateAlarm(old: ShadowAlarm, new: ShadowAlarm) {
@@ -63,10 +64,11 @@ object AlarmManagerUtil {
                 }
                 new.isEnabled -> setAlarm(new)
             }
+            return
         } else if (needReplace && resultFlags != null) {
             when {
                 old.isEnabled == new.isEnabled && old.isEnabled -> {
-                    cancelAlarm(old.id.hashCode(), resultFlags[1])
+                    cancelAlarm(abs(old.id.hashCode()), resultFlags[1])
                     setUpAlarms(
                         new.id.hashCode(),
                         new.label,
@@ -79,6 +81,15 @@ object AlarmManagerUtil {
                     cancelAlarm(old)
                 }
                 new.isEnabled -> setAlarm(new)
+            }
+            return
+        }
+
+        if (new.isEnabled != old.isEnabled) {
+            if (new.isEnabled) {
+                setAlarm(new)
+            } else {
+                cancelAlarm(old)
             }
         }
     }
@@ -131,7 +142,7 @@ object AlarmManagerUtil {
 
 
     fun setAlarm(model: ShadowAlarm) {
-        val id = model.id.hashCode()
+        val id = abs(model.id.hashCode())
         setUpAlarms(id, model.label, model.remindHours, model.remindMinutes, model.remindDaysInWeek)
         Log.d(TAG, "in set Alarm")
     }

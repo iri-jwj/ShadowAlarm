@@ -26,10 +26,13 @@ class LockedScreenAlarmActivity : AppCompatActivity() {
 
         checkInfoValid(label, id)
 
+
+        val util = AlarmNotifyUtil(this)
         findViewById<TextView>(R.id.lock_screen_label).text = label
 
         findViewById<Button>(R.id.lock_screen_cancel).setOnClickListener {
             turnOffScreen()
+            util.stopNotify()
             finish()
         }
 
@@ -43,6 +46,7 @@ class LockedScreenAlarmActivity : AppCompatActivity() {
             i.putExtra("id", id)
             i.action = AlarmReceiver.ACTION_DELAY
             sendBroadcast(i)
+            util.stopNotify()
             finish()
         }
         turnOnScreen()
