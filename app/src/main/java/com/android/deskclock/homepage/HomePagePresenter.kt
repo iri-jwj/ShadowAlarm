@@ -80,13 +80,12 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
     }
 
     fun filterEnabledAlarm(): List<ShadowAlarm> {
-        val result = if (isFiltered) alarmList.filter {
+        isFiltered = !isFiltered
+        return if (isFiltered) alarmList.filter {
             it.isEnabled
         } else {
             alarmList
         }
-        isFiltered = !isFiltered
-        return result
     }
 
     private fun sortAlarmList() {

@@ -1,6 +1,7 @@
 package com.android.deskclock.addeditpage
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.android.deskclock.R
 import com.android.deskclock.customview.UselessToolbar
+
 
 class EditLabelFragment(private val label: String) : Fragment() {
 
@@ -41,7 +43,7 @@ class EditLabelFragment(private val label: String) : Fragment() {
             val imm =
                 instance.activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             if (imm.isActive) {
-                imm.hideSoftInputFromWindow(instance.view?.applicationWindowToken, 0);
+                imm.hideSoftInputFromWindow(instance.view?.applicationWindowToken, 0)
             }
             mManager.beginTransaction().remove(instance).commit()
         }
@@ -83,6 +85,7 @@ class EditLabelFragment(private val label: String) : Fragment() {
                     //do nothing
                 }
             })
+
         }
 
         clearButton.setOnClickListener {
@@ -97,5 +100,20 @@ class EditLabelFragment(private val label: String) : Fragment() {
         }
 
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (Build.VERSION.SDK_INT >= 26) {
+            view?.findViewById<EditText>(R.id.edit_label)?.apply {
+                focusable = View.FOCUSABLE
+                requestFocus()
+            }
+            val inputManager =
+                context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+            inputManager.showSoftInput(view?.findViewById<EditText>(R.id.edit_label), 0)
+        }
+
     }
 }

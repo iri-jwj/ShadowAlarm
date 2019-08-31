@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/app_default_background"
+    android:background="@color/app_item_background"
     android:orientation="vertical">
 
     <View
@@ -82,7 +82,8 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
-
+            android:singleLine="true"
+            android:ellipsize="end"
             android:layout_toStartOf="@id/second_arrow"
             android:layout_toEndOf="@id/add_edit_label_text"
             android:gravity="end"

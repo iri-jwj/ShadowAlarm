@@ -52,7 +52,7 @@ class AlarmsAdapter(private val activity: Activity) :
     override fun onBindViewHolder(holder: AlarmViewHolder, position: Int) {
 
         val alarm = alarmList!![position]
-        Log.d("AlarmAdapter","position:$position + id=${alarm.id} + ")
+        Log.d("AlarmAdapter", "position:$position + id=${alarm.id} + ")
 
         holder.getClockTimeTextView().text =
             getFormattedTimeString(alarm.remindHours, alarm.remindMinutes)
@@ -60,14 +60,14 @@ class AlarmsAdapter(private val activity: Activity) :
         holder.getLabelTextView().text =
             getFormattedLabelString(alarm.label, alarm.remindDaysInWeek)
 
-        holder.getSwitchButton().setOnCheckedChangeListener{_,_->
+        holder.getSwitchButton().setOnCheckedChangeListener { _, _ ->
 
         }
 
         holder.getSwitchButton().isChecked = alarm.isEnabled
 
         holder.getSwitchButton().setOnCheckedChangeListener { _, isChecked ->
-            Log.d("AlarmAdapter","position:$position + id=${alarm.id} + ")
+            Log.d("AlarmAdapter", "position:$position + id=${alarm.id} + ")
             onCheckedChangeCallback(isChecked, alarm)
         }
 
@@ -93,15 +93,17 @@ class AlarmsAdapter(private val activity: Activity) :
     private fun getFormattedLabelString(label: String, remindDaysInWeek: Int): String {
         val builder = StringBuilder()
         builder.append(label)
-        when {
-            remindDaysInWeek == 0b0111110 -> builder.append(", 每工作日")
-            remindDaysInWeek == 0b1000001 -> builder.append(", 每周末")
+        builder.append(" ")
+        when (remindDaysInWeek) {
+            0b0111110 -> builder.append(", 每工作日")
+            0b1000001 -> builder.append(", 每周末")
+            0b1111111 -> builder.append(", 每天")
             else -> for (i in 1..7) {
                 var temp = 1
                 temp = temp.shl(i - 1)
                 if (remindDaysInWeek.and(temp) == temp) {
                     builder.append(getTargetWeekDay(i))
-                    builder.append(" ")
+
                 }
             }
         }
@@ -111,25 +113,25 @@ class AlarmsAdapter(private val activity: Activity) :
     private fun getTargetWeekDay(weekday: Int): String {
         return when (weekday) {
             1 -> {
-                "周日"
+                " 周日"
             }
             2 -> {
-                "周一"
+                " 周一"
             }
             3 -> {
-                "周二"
+                " 周二"
             }
             4 -> {
-                "周三"
+                " 周三"
             }
             5 -> {
-                "周四"
+                " 周四"
             }
             6 -> {
-                "周五"
+                " 周五"
             }
             7 -> {
-                "周六"
+                " 周六"
             }
             else -> {
                 ""

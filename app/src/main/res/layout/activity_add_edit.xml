@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_default_background"
+    android:background="@color/app_dark_background"
     tools:context=".addeditpage.AddEditAct">
 
     <com.android.deskclock.customview.UselessToolbar
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_alignParentTop="true"
+        android:background="@color/app_item_background"
         app:left_text="@string/add_edit_cancel"
         app:right_text="@string/add_edit_save" />
 
@@ -25,12 +26,14 @@
 
         <NumberPicker
             android:id="@+id/number_picker_hour"
+            android:background="@color/app_dark_background"
             android:layout_width="0dp"
             android:layout_height="160dp"
             android:layout_weight="1" />
 
         <NumberPicker
             android:id="@+id/number_picker_minute"
+            android:background="@color/app_dark_background"
             android:layout_width="0dp"
             android:layout_height="160dp"
             android:layout_weight="1" />
