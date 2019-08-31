@@ -2,6 +2,7 @@
     <string name="app_name">ShadowAlarm</string>
     <string name="overlay_title">ShadowAlarm Alert</string>
     <string name="remind_later">Remind Later</string>
+    <string name="confirm">confirm</string>
     <string name="close_alarm">Close</string>
     <string name="is_repeat">重复</string>
     <string name="add_edit_label">标签</string>

@@ -28,6 +28,9 @@ class LockedScreenAlarmActivity : AppCompatActivity() {
 
 
         val util = AlarmNotifyUtil(this)
+
+        util.notifyAudioAndVibrate()
+
         findViewById<TextView>(R.id.lock_screen_label).text = label
 
         findViewById<Button>(R.id.lock_screen_cancel).setOnClickListener {

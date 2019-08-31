@@ -3,6 +3,7 @@ package com.android.deskclock.util
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.os.Build
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -50,8 +51,10 @@ class OverlayWindowUtil(
                     windowManager.removeView(view)
                 }
             }
-
-            val layoutParams = buildLayoutParams(WindowManager.LayoutParams())
+            val xyList = calculateWithAndHeight(windowManager)
+            val width = xyList[0]*0.68
+            val height = xyList[1]*0.32
+            val layoutParams = buildLayoutParams(WindowManager.LayoutParams(),width.toInt(),height.toInt())
 
             windowManager.addView(
                 view,
@@ -73,15 +76,15 @@ class OverlayWindowUtil(
     }
 
 
-    private fun buildLayoutParams(params: WindowManager.LayoutParams): WindowManager.LayoutParams {
+    private fun buildLayoutParams(params: WindowManager.LayoutParams,targetWidth:Int,targetHeight:Int): WindowManager.LayoutParams {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
             params.type = WindowManager.LayoutParams.TYPE_PHONE
         }
         params.apply {
-            width = WindowManager.LayoutParams.WRAP_CONTENT
-            height = WindowManager.LayoutParams.WRAP_CONTENT
+            width =targetWidth
+            height = targetHeight
             flags =
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
@@ -90,6 +93,18 @@ class OverlayWindowUtil(
                         WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
         }
         return params
+    }
+
+    private fun calculateWithAndHeight(windowManager: WindowManager): Array<Int> {
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        display.getSize(size)
+
+        return if (size.x < size.y) {
+            arrayOf(size.x, size.y)
+        } else {
+            arrayOf(size.y, size.x)
+        }
     }
 
 }

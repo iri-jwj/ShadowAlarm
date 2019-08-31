@@ -18,9 +18,9 @@ class AlarmNotifyUtil(private val context: Context) {
 
         vibration = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (Build.VERSION.SDK_INT >= 26) {
-            vibration.vibrate(VibrationEffect.createWaveform(longArrayOf(10, 100, 10, 100), 0))
+            vibration.vibrate(VibrationEffect.createWaveform(longArrayOf(100, 200, 100, 200), 0))
         } else {
-            vibration.vibrate(longArrayOf(10, 100, 10, 100), 0)
+            vibration.vibrate(longArrayOf(100, 200, 100, 200), 0)
         }
     }
 
