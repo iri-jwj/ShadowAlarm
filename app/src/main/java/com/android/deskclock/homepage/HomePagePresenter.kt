@@ -11,6 +11,7 @@ import com.android.deskclock.model.database.AlarmDatabase
 import com.android.deskclock.util.AlarmManagerUtil
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.abs
 
 class HomePagePresenter(private val context: Context) : BasePresenter() {
 
@@ -135,5 +136,23 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
 
     fun getAlarmList(): List<ShadowAlarm> {
         return alarmList
+    }
+
+    /**
+     *
+     */
+    fun setOnceAlarmFinished(id: Int) {
+        for (alarm in alarmList) {
+            if (abs(alarm.id.hashCode()) == id && alarm.remindDaysInWeek == 0) {
+                alarm.isEnabled = false
+                resolver.update(
+                    uri,
+                    buildContentValues(alarm),
+                    "id = ?",
+                    arrayOf(alarm.id.toString())
+                )
+                updateAlarm(alarm,true)
+            }
+        }
     }
 }

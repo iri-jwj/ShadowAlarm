@@ -25,10 +25,11 @@
         android:layout_width="190dp"
         android:layout_height="100dp"
         android:layout_marginTop="16dp"
+        android:ellipsize="end"
         android:gravity="center"
-        android:maxLines="5"
+        android:maxLines="3"
         android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/overlay_title" />

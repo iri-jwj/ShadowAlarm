@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.android.deskclock.R
+import com.android.deskclock.homepage.HomePagePresenter
 
 class LockedScreenAlarmActivity : AppCompatActivity() {
 
@@ -35,6 +36,9 @@ class LockedScreenAlarmActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.lock_screen_cancel).setOnClickListener {
             turnOffScreen()
+            val presenter = HomePagePresenter(this)
+            presenter.start()
+            presenter.setOnceAlarmFinished(id)
             util.stopNotify()
             finish()
         }

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import android.util.Log
+import com.android.deskclock.homepage.HomePagePresenter
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -46,8 +47,8 @@ class AlarmReceiver : BroadcastReceiver() {
     private fun showAlarmByActivity(context: Context, label: String?, id: Int) {
         val intent = Intent(context, LockedScreenAlarmActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra("label",label)
-        intent.putExtra("id",id)
+        intent.putExtra("label", label)
+        intent.putExtra("id", id)
         context.startActivity(intent)
     }
 
@@ -60,7 +61,11 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun showAlarmByNotification(context: Context, label: String?, id: Int?) {
-        AlarmNotificationUtil(context, label!!, id!!).showNotification()
+
+        val presenter = HomePagePresenter(context)
+        presenter.start()
+        presenter.setOnceAlarmFinished(id!!)
+        AlarmNotificationUtil(context, label!!, id).showNotification()
     }
 
 
