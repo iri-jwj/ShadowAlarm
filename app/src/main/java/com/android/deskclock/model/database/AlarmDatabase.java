@@ -34,6 +34,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
                 AlarmDatabaseEntity.COLUMN_REMINDHOUR + " integer, " +
                 AlarmDatabaseEntity.COLUMN_REMINDMINUTE + " integer, " +
                 AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK + " integer ," +
+                AlarmDatabaseEntity.COLUMN_REMIND_ACTION + " integer ," +
                 AlarmDatabaseEntity.COLUMN_ENABLED + " bool)"
         );
     }
@@ -51,6 +52,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         public static final String COLUMN_REMINDHOUR = "remindHours";
         public static final String COLUMN_REMINDMINUTE = "remindMinutes";
         public static final String COLUMN_REMINDDAYSINWEEK = "remindDaysInWeek";
+        public static final String COLUMN_REMIND_ACTION = "remindAction";
         public static final String COLUMN_ENABLED = "isEnabled";
     }
 }

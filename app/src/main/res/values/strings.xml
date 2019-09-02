@@ -1,14 +1,17 @@
 <resources>
     <string name="app_name">ShadowAlarm</string>
-    <string name="overlay_title">ShadowAlarm Alert</string>
-    <string name="remind_later">Remind Later</string>
-    <string name="confirm">confirm</string>
-    <string name="close_alarm">Close</string>
+    <string name="overlay_title">确认操作</string>
+    <string name="remind_later">再睡一会儿！！</string>
+    <string name="confirm">确认</string>
+    <string name="close_alarm">取消</string>
     <string name="is_repeat">重复</string>
     <string name="add_edit_label">标签</string>
     <string name="add_edit_audio">铃声</string>
     <string name="add_edit_cancel">取消</string>
     <string name="add_edit_save">存储</string>
+    <string name="add_edit_remind_action">提醒方法</string>
+    <string name="remind_action_vibration">震动</string>
+    <string name="remind_action_alarm">闹铃</string>
 
     <string name="select_mon">周一</string>
     <string name="select_tues">周二</string>

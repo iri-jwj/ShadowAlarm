@@ -63,6 +63,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
                 remindDaysInWeek = shadowAlarm.remindDaysInWeek
                 label = shadowAlarm.label
                 isEnabled = shadowAlarm.isEnabled
+                remindAction = shadowAlarm.remindAction
             }
             if (!checkedClick) {
                 sortAlarmList()
@@ -108,6 +109,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK)),
+                    cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)) == 1
                 )
                 tempList.add(alarm)
@@ -129,6 +131,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
                 AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK,
                 shadowAlarm.remindDaysInWeek
             )
+            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION, shadowAlarm.remindAction)
             put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED, shadowAlarm.isEnabled)
         }
         return values
@@ -151,7 +154,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
                     "id = ?",
                     arrayOf(alarm.id.toString())
                 )
-                updateAlarm(alarm,true)
+                updateAlarm(alarm, true)
             }
         }
     }

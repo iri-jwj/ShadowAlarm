@@ -1,12 +1,15 @@
 package com.android.deskclock.util
 
+import android.app.AlarmManager
 import android.app.KeyguardManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import android.util.Log
 import com.android.deskclock.homepage.HomePagePresenter
+import java.util.*
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -20,12 +23,40 @@ class AlarmReceiver : BroadcastReceiver() {
 
         when (intent!!.action) {
             ACTION_DELAY -> {
-
+                handleDelayAlarmAction(context, intent)
             }
             AlarmManagerUtil.alarmAction -> {
                 handleNormalAlarmAction(context, intent)
             }
         }
+    }
+
+    private fun handleDelayAlarmAction(context: Context?, intent: Intent) {
+        val newIntent = Intent(context, AlarmReceiver::class.java)
+        newIntent.action = AlarmManagerUtil.alarmAction
+        newIntent.putExtra("id", intent.getIntExtra("id", 0))
+        newIntent.putExtra("label", intent.getStringExtra("label"))
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            intent.getIntExtra("id", 0),
+            newIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        val calender = Calendar.getInstance()
+        calender.set(
+            calender[Calendar.YEAR],
+            calender[Calendar.MONTH],
+            calender[Calendar.DAY_OF_MONTH],
+            calender[Calendar.HOUR_OF_DAY],
+            calender[Calendar.MINUTE] + 5,
+            0
+        )
+        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setExact(
+            AlarmManager.RTC_WAKEUP,
+            calender.timeInMillis,
+            pendingIntent
+        )
     }
 
     private fun handleNormalAlarmAction(context: Context?, intent: Intent) {

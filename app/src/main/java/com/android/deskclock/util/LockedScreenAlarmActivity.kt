@@ -45,6 +45,11 @@ class LockedScreenAlarmActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.lock_screen_delay).setOnClickListener {
             turnOffScreen()
+
+            val presenter = HomePagePresenter(this)
+            presenter.start()
+            presenter.setOnceAlarmFinished(id)
+
             val i = Intent(
                 this,
                 AlarmReceiver::class.java

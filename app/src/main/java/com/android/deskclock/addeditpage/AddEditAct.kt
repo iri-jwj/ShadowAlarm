@@ -139,10 +139,29 @@ class AddEditAct : BaseView<AddEditPresenter>() {
         }
 
         findViewById<ViewGroup>(R.id.add_edit_repeat_layout).setOnClickListener {
-            SelectRepeatFragment.setUpFragment(supportFragmentManager, R.id.container,presenter.getRemindDaysInWeek()) {
+            SelectRepeatFragment.setUpFragment(
+                supportFragmentManager,
+                R.id.container,
+                presenter.getRemindDaysInWeek()
+            ) {
                 handelNewRepeat(it)
             }
         }
+
+        findViewById<ViewGroup>(R.id.add_edit_remind_action_layout).setOnClickListener {
+            RemindActionFragment.setUpFragment(
+                supportFragmentManager,
+                R.id.container,
+                presenter.getRemindAction()
+            ) {
+                handelNewRemindAction(it)
+            }
+        }
+    }
+
+    private fun handelNewRemindAction(action: Int) {
+        presenter.saveNewRemindAction(action)
+        findViewById<TextView>(R.id.add_edit_remind_action).text = presenter.getRemindActionText()
     }
 
     private fun handelNewLabel(label: String) {

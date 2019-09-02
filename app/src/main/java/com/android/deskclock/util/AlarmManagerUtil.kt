@@ -19,7 +19,7 @@ object AlarmManagerUtil {
 
     private lateinit var mContext: Context
     private lateinit var mAlarmManager: AlarmManager
-    private const val EVERYDAY: Int = 0x1111111
+    private const val EVERYDAY: Int = 0b1111111
 
     fun setUpWithContext(context: Context): AlarmManagerUtil {
         mContext = context.applicationContext
@@ -41,7 +41,8 @@ object AlarmManagerUtil {
         var needReplace = false
         if (old.label != new.label ||
             old.remindHours != new.remindHours ||
-            old.remindMinutes != new.remindMinutes
+            old.remindMinutes != new.remindMinutes ||
+            old.remindAction != new.remindAction
         ) {
             needReplace = true
         }
@@ -117,7 +118,8 @@ object AlarmManagerUtil {
 
     private fun cancelAlarm(id: Int, needCancelFlags: Int) {
         if (needCancelFlags == 0) {
-            val intent = Intent(alarmAction)
+            val intent = Intent(mContext, AlarmReceiver::class.java)
+            intent.action = alarmAction
             val pendingIntent =
                 PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_IMMUTABLE)
             mAlarmManager.cancel(pendingIntent)
@@ -126,7 +128,8 @@ object AlarmManagerUtil {
                 var temp = 1
                 temp = temp.shl(i)
                 if (needCancelFlags.and(temp) != 0) {
-                    val intent = Intent(alarmAction)
+                    val intent = Intent(mContext, AlarmReceiver::class.java)
+                    intent.action = alarmAction
                     val pendingIntent =
                         PendingIntent.getBroadcast(
                             mContext,

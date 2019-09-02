@@ -29,8 +29,6 @@ class SelectRepeatFragment(private val hasSelectedDays: Int) : Fragment() {
             instance = SelectRepeatFragment(selectedDays)
             mManager.beginTransaction().add(container, instance, AddEditAct.selectRepeatTag)
                 .commit()
-
-
         }
 
         private fun hideSelf(result: Int) {

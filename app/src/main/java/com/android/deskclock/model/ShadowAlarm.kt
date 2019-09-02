@@ -10,12 +10,14 @@ data class ShadowAlarm(
     var remindHours: Int,
     var remindMinutes: Int,
     var remindDaysInWeek: Int,
+    var remindAction: Int,
     var isEnabled: Boolean
 ) : Cloneable, Parcelable {
 
     constructor(parcel: Parcel) : this(
         UUID.fromString(parcel.readString()),
         parcel.readString(),
+        parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),
@@ -56,7 +58,15 @@ data class ShadowAlarm(
     override fun clone(): ShadowAlarm {
         val newId = UUID.fromString(id.toString())
         val newLabel = String(label.toCharArray())
-        return ShadowAlarm(newId, newLabel, remindHours, remindMinutes, remindDaysInWeek, isEnabled)
+        return ShadowAlarm(
+            newId,
+            newLabel,
+            remindHours,
+            remindMinutes,
+            remindDaysInWeek,
+            remindAction,
+            isEnabled
+        )
     }
 
     fun getNewCopy(): ShadowAlarm {

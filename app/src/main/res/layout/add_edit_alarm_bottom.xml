@@ -11,9 +11,9 @@
         android:background="@color/divider_line" />
 
     <RelativeLayout
+        android:id="@+id/add_edit_repeat_layout"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:id="@+id/add_edit_repeat_layout"
         android:orientation="horizontal">
 
         <TextView
@@ -59,9 +59,9 @@
         android:background="@color/divider_line" />
 
     <RelativeLayout
+        android:id="@+id/add_edit_label_layout"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:id="@+id/add_edit_label_layout"
         android:orientation="horizontal">
 
         <TextView
@@ -82,11 +82,11 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="@dimen/default_margin"
-            android:singleLine="true"
-            android:ellipsize="end"
             android:layout_toStartOf="@id/second_arrow"
             android:layout_toEndOf="@id/add_edit_label_text"
+            android:ellipsize="end"
             android:gravity="end"
+            android:singleLine="true"
             android:textColor="@color/add_edit_sub_text"
             android:textSize="@dimen/notification_label" />
 
@@ -132,11 +132,61 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_marginEnd="32dp"
-            android:text="@string/alarm_audio"
             android:layout_toEndOf="@id/add_edit_audio_text"
             android:gravity="end"
+            android:text="@string/alarm_audio"
             android:textColor="@color/add_edit_sub_text"
             android:textSize="@dimen/notification_label" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginStart="@dimen/ex_margin"
+
+        android:background="@color/divider_line" />
+
+    <RelativeLayout
+        android:id="@+id/add_edit_remind_action_layout"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/add_edit_remind_action_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/ex_margin"
+            android:text="@string/add_edit_remind_action"
+            android:textColor="@color/listItemText"
+            android:textSize="@dimen/notification_label" />
+
+        <TextView
+            android:id="@+id/add_edit_remind_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_toStartOf="@id/forth_arrow"
+            android:layout_toEndOf="@id/add_edit_remind_action_text"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:singleLine="true"
+            android:textColor="@color/add_edit_sub_text"
+            android:textSize="@dimen/notification_label" />
+
+        <ImageView
+            android:id="@+id/forth_arrow"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:scaleType="centerInside"
+            android:src="@drawable/right_arrow" />
     </RelativeLayout>
 
     <View

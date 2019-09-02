@@ -17,6 +17,7 @@ class AddEditPresenter(private val action: String) : BasePresenter() {
             calendar.get(Calendar.HOUR_OF_DAY),
             calendar.get(Calendar.MINUTE),
             0,
+            0b11,
             true
         )
     }
@@ -120,5 +121,25 @@ class AddEditPresenter(private val action: String) : BasePresenter() {
 
     fun getRemindDaysInWeek(): Int {
         return mAlarm.remindDaysInWeek
+    }
+
+    fun getRemindAction(): Int {
+        return mAlarm.remindAction
+    }
+
+    fun saveNewRemindAction(action: Int) {
+        mAlarm.remindAction = action
+    }
+
+    fun getRemindActionText(): String {
+        val builder = StringBuilder()
+        if (mAlarm.remindAction.and(0b01) != 0) {
+            builder.append("响铃")
+        }
+
+        if (mAlarm.remindAction.and(0b11) != 0) {
+            builder.append(" 震动")
+        }
+        return builder.toString()
     }
 }
