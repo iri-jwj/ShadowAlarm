@@ -102,7 +102,6 @@ class AddEditAct : BaseView<AddEditPresenter>() {
             minValue = 0
             value = presenter.getNewAlarmHour()
             descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
-            wrapSelectorWheel = false
         }
         findViewById<NumberPicker>(R.id.number_picker_minute).apply {
             setFormatter {
@@ -121,7 +120,6 @@ class AddEditAct : BaseView<AddEditPresenter>() {
             minValue = 0
             value = presenter.getNewAlarmMinute()
             descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
-            wrapSelectorWheel = false
         }
 
         findViewById<TextView>(R.id.add_edit_repeat).text = presenter.getRepeatDays()
