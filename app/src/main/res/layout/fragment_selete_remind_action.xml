@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
+    android:background="@color/app_dark_background"
     android:orientation="vertical">
 
 
@@ -18,6 +19,8 @@
         android:id="@+id/select_alarm"
         android:layout_width="match_parent"
         android:layout_height="36dp"
+        android:background="@color/app_item_background"
+
         android:layout_marginTop="80dp">
 
         <TextView
@@ -45,6 +48,7 @@
         android:id="@+id/select_vibration"
         android:layout_width="match_parent"
         android:layout_height="36dp"
+        android:background="@color/app_item_background"
         android:layout_marginTop="@dimen/default_margin">
 
         <TextView

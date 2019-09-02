@@ -83,25 +83,25 @@ class RemindActionFragment(private val hasSelectedRemindAction: Int) : Fragment(
             if (selectedActionResult.and(0b01) != 0) {
                 selectedActionResult = selectedActionResult.and(0b10)
                 remindAlarm.findViewById<ImageView>(R.id.is_remind_action_alarm).visibility =
-                    View.VISIBLE
+                    View.GONE
             } else {
                 selectedActionResult = selectedActionResult.or(0b01)
                 remindAlarm.findViewById<ImageView>(R.id.is_remind_action_alarm).visibility =
-                    View.GONE
+                    View.VISIBLE
             }
         }
 
         remindVibration.setOnClickListener {
-            if (selectedActionResult.and(0b01) != 0) {
+            if (selectedActionResult.and(0b10) != 0) {
                 selectedActionResult = selectedActionResult.and(0b01)
                 remindVibration.findViewById<ImageView>(R.id.is_remind_action_vibration)
                     .visibility =
-                    View.VISIBLE
+                    View.GONE
             } else {
                 selectedActionResult = selectedActionResult.or(0b10)
                 remindVibration.findViewById<ImageView>(R.id.is_remind_action_vibration)
                     .visibility =
-                    View.GONE
+                    View.VISIBLE
             }
         }
     }

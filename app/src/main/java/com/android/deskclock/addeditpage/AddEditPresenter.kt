@@ -137,7 +137,7 @@ class AddEditPresenter(private val action: String) : BasePresenter() {
             builder.append("响铃")
         }
 
-        if (mAlarm.remindAction.and(0b11) != 0) {
+        if (mAlarm.remindAction.and(0b10) != 0) {
             builder.append(" 震动")
         }
         return builder.toString()

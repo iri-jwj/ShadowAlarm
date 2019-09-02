@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
-import android.util.Log
 import com.android.deskclock.homepage.HomePagePresenter
 import java.util.*
 
@@ -19,7 +18,6 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        Log.d(TAG, "receive Action : ${intent?.action}")
 
         when (intent!!.action) {
             ACTION_DELAY -> {
@@ -67,19 +65,21 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val label = intent.getStringExtra("label")
         val id = intent.getIntExtra("id", 0)
+        val remindAction = intent.getIntExtra("remindAction", 0)
         if (isScreenLighted and !isLocked) {
-            showAlarmByNotification(context, label, id)
+            showAlarmByNotification(context, label, id, remindAction)
         } else {
             //showAlarmByOverlayWindow(context, label, id)
-            showAlarmByActivity(context, label, id)
+            showAlarmByActivity(context, label, id, remindAction)
         }
     }
 
-    private fun showAlarmByActivity(context: Context, label: String?, id: Int) {
+    private fun showAlarmByActivity(context: Context, label: String?, id: Int, remindAction: Int) {
         val intent = Intent(context, LockedScreenAlarmActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtra("label", label)
         intent.putExtra("id", id)
+        intent.putExtra("remindAction", remindAction)
         context.startActivity(intent)
     }
 
@@ -91,12 +91,17 @@ class AlarmReceiver : BroadcastReceiver() {
         context.startService(intent)
     }
 
-    private fun showAlarmByNotification(context: Context, label: String?, id: Int?) {
+    private fun showAlarmByNotification(
+        context: Context,
+        label: String?,
+        id: Int?,
+        remindAction: Int
+    ) {
 
         val presenter = HomePagePresenter(context)
         presenter.start()
         presenter.setOnceAlarmFinished(id!!)
-        AlarmNotificationUtil(context, label!!, id).showNotification()
+        AlarmNotificationUtil(context, label!!, id, remindAction).showNotification()
     }
 
 

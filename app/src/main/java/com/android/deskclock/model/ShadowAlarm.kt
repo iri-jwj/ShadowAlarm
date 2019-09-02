@@ -16,12 +16,12 @@ data class ShadowAlarm(
 
     constructor(parcel: Parcel) : this(
         UUID.fromString(parcel.readString()),
-        parcel.readString(),
+        parcel.readString()!!,
         parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),
-        parcel.readByte() != 0.toByte()
+        parcel.readInt() != 0
     ) {
     }
 
@@ -37,7 +37,8 @@ data class ShadowAlarm(
             writeInt(remindHours)
             writeInt(remindMinutes)
             writeInt(remindDaysInWeek)
-            writeByte(enabled.toByte())
+            writeInt(remindAction)
+            writeInt(enabled)
         }
     }
 

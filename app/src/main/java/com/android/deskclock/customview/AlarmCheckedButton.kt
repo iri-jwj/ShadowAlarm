@@ -5,6 +5,9 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
 
+/**
+ * @deprecated
+ */
 class AlarmCheckedButton : View {
     constructor(context: Context) : this(context, null)
 

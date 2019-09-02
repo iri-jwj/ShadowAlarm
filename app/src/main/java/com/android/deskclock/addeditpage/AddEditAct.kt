@@ -128,6 +128,8 @@ class AddEditAct : BaseView<AddEditPresenter>() {
 
         findViewById<TextView>(R.id.add_edit_label).text = presenter.getNewAlarmLabel()
 
+        findViewById<TextView>(R.id.add_edit_remind_action).text = presenter.getRemindActionText()
+
         findViewById<ViewGroup>(R.id.add_edit_label_layout).setOnClickListener {
             EditLabelFragment.setUpFragment(
                 supportFragmentManager,

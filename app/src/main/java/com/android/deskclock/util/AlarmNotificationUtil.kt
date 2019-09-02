@@ -17,7 +17,8 @@ import com.android.deskclock.model.database.AlarmDatabase
 class AlarmNotificationUtil(
     private val context: Context,
     private val label: String,
-    private var id: Int
+    private var id: Int,
+    private val remindAction: Int
 ) {
     private val channelId = "com.android.deskclock.notification"
     private val channelName = "ShadowAlarm's normal notification"
@@ -31,22 +32,19 @@ class AlarmNotificationUtil(
         if (Build.VERSION.SDK_INT >= 26) {
             val uri = Uri.parse("android.resource://" + context.packageName + "/" + R.raw.mlbq)
             val attribute = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED).build()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
             channel =
                 NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
             channel.apply {
                 enableVibration(true)
                 setSound(uri, attribute)
-                vibrationPattern = longArrayOf(10, 100, 10, 100, 10, 100)
+                vibrationPattern = longArrayOf(200, 400, 200, 400, 200, 400)
             }
             builder = Notification.Builder(context, channelId)
             notificationManager.createNotificationChannel(channel)
         } else {
             builder = Notification.Builder(context)
         }
-
-
     }
 
     fun showNotification() {
@@ -66,6 +64,7 @@ class AlarmNotificationUtil(
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setFullScreenIntent(pendingIntent, true)
+            //.setOngoing(true)
 
 
         if (Build.VERSION.SDK_INT < 26) {
@@ -77,6 +76,8 @@ class AlarmNotificationUtil(
             notificationBuilder.setVibrate(longArrayOf(10, 100, 10, 100))
         }
 
-        notificationManager.notify(id, notificationBuilder.build())
+        val notification = notificationBuilder.build()
+        notification.flags.or(Notification.FLAG_INSISTENT).or(Notification.FLAG_NO_CLEAR)
+        notificationManager.notify(id, notification)
     }
 }
