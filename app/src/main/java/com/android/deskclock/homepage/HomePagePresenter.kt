@@ -113,6 +113,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION)),
+                    cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_AUDIO)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)) == 1
                 )
                 tempList.add(alarm)
@@ -135,6 +136,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
                 shadowAlarm.remindDaysInWeek
             )
             put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION, shadowAlarm.remindAction)
+            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_AUDIO, shadowAlarm.remindAudioPath)
             put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED, shadowAlarm.isEnabled)
         }
         return values

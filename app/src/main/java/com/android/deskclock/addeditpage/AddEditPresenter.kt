@@ -1,11 +1,12 @@
 package com.android.deskclock.addeditpage
 
+import android.content.Context
 import com.android.deskclock.BasePresenter
 import com.android.deskclock.model.ShadowAlarm
 import java.lang.StringBuilder
 import java.util.*
 
-class AddEditPresenter(private val action: String) : BasePresenter() {
+class AddEditPresenter(private val action: String, private val context: Context) : BasePresenter() {
 
     private lateinit var mAlarm: ShadowAlarm
 
@@ -18,6 +19,7 @@ class AddEditPresenter(private val action: String) : BasePresenter() {
             calendar.get(Calendar.MINUTE),
             0,
             0b11,
+            "${context.dataDir}/马林巴琴.mp3",
             true
         )
     }

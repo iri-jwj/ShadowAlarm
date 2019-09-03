@@ -3,7 +3,6 @@ package com.android.deskclock.util
 import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -72,13 +71,11 @@ object AlarmManagerUtil {
                 old.isEnabled == new.isEnabled && old.isEnabled -> {
                     cancelAlarm(old, resultFlags[1])
                     setUpAlarms(
-                        getIntent(mContext,new,AlarmReceiver::class.java, alarmAction),
+                        getIntent(mContext, new, AlarmReceiver::class.java),
                         new.id.hashCode(),
-                        new.label,
                         new.remindHours,
                         new.remindMinutes,
-                        resultFlags[0],
-                        new.remindAction
+                        resultFlags[0]
                     )
                 }
                 old.isEnabled -> {
@@ -124,10 +121,7 @@ object AlarmManagerUtil {
 
         if (needCancelFlags == 0) {
 
-            val intent = getIntent(mContext, shadowAlarm, AlarmReceiver::class.java, alarmAction)
-
-            Intent(mContext, AlarmReceiver::class.java)
-            intent.action = alarmAction
+            val intent = getIntent(mContext, shadowAlarm, AlarmReceiver::class.java)
             val pendingIntent =
                 PendingIntent.getBroadcast(mContext, intId, intent, PendingIntent.FLAG_ONE_SHOT)
             mAlarmManager.cancel(pendingIntent)
@@ -136,14 +130,13 @@ object AlarmManagerUtil {
                 var temp = 1
                 temp = temp.shl(i)
                 if (needCancelFlags.and(temp) != 0) {
-                    val intent = Intent(mContext, AlarmReceiver::class.java)
-                    intent.action = alarmAction
+                    val intent = getIntent(mContext, shadowAlarm, AlarmReceiver::class.java)
                     val pendingIntent =
                         PendingIntent.getBroadcast(
                             mContext,
                             intId + temp,
                             intent,
-                           PendingIntent.FLAG_ONE_SHOT
+                            PendingIntent.FLAG_ONE_SHOT
                         )
                     mAlarmManager.cancel(pendingIntent)
                 }
@@ -155,13 +148,11 @@ object AlarmManagerUtil {
     fun setAlarm(model: ShadowAlarm) {
         val id = abs(model.id.hashCode())
         setUpAlarms(
-            getIntent(mContext, model, AlarmReceiver::class.java, alarmAction),
+            getIntent(mContext, model, AlarmReceiver::class.java),
             id,
-            model.label,
             model.remindHours,
             model.remindMinutes,
-            model.remindDaysInWeek,
-            model.remindAction
+            model.remindDaysInWeek
         )
         Log.d(TAG, "in set Alarm")
     }
@@ -169,11 +160,9 @@ object AlarmManagerUtil {
     private fun setUpAlarms(
         intent: Intent,
         id: Int,
-        label: String,
         hour: Int,
         minutes: Int,
-        remindFlags: Int,
-        remindAction: Int
+        remindFlags: Int
     ) {
 
         val calendar = Calendar.getInstance()
@@ -195,7 +184,7 @@ object AlarmManagerUtil {
 
         if (remindFlags == 0) {
             val pendingIntent =
-                PendingIntent.getBroadcast(mContext, id, intent,PendingIntent.FLAG_ONE_SHOT)
+                PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_ONE_SHOT)
             mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             Log.d(
                 TAG,
@@ -208,7 +197,7 @@ object AlarmManagerUtil {
                         mContext,
                         id,
                         intent,
-                       PendingIntent.FLAG_ONE_SHOT
+                        PendingIntent.FLAG_ONE_SHOT
                     )
                 mAlarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
@@ -229,7 +218,7 @@ object AlarmManagerUtil {
                                 mContext,
                                 id + temp,
                                 intent,
-                               PendingIntent.FLAG_ONE_SHOT
+                                PendingIntent.FLAG_ONE_SHOT
                             )
                         mAlarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,
@@ -249,14 +238,14 @@ object AlarmManagerUtil {
     private fun <T : Any> getIntent(
         context: Context,
         shadowAlarm: ShadowAlarm,
-        targetClass: Class<T>,
-        action: String
+        targetClass: Class<T>
     ): Intent {
         val intent = Intent(context, targetClass)
-        intent.action = action
+        intent.action = alarmAction
         intent.putExtra("id", abs(shadowAlarm.id.hashCode()))
         intent.putExtra("label", shadowAlarm.label)
         intent.putExtra("remindAction", shadowAlarm.remindAction)
+        intent.putExtra("audio", shadowAlarm.remindAudioPath)
         return intent
     }
 

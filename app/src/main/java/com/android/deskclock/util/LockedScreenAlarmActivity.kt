@@ -24,11 +24,12 @@ class LockedScreenAlarmActivity : AppCompatActivity() {
         val intent = intent
         val label = intent.getStringExtra("label")
         val id = intent.getIntExtra("id", 0)
+        val audioPath = intent.getStringExtra("audio")
 
         checkInfoValid(label, id)
 
 
-        val util = AlarmNotifyUtil(this)
+        val util = AlarmNotifyUtil(this,audioPath)
         util.notifyAudioAndVibrate(intent.getIntExtra("remindAction",0))
 
         findViewById<TextView>(R.id.lock_screen_label).text = label

@@ -10,15 +10,18 @@ import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
 import android.widget.RemoteViews
+import androidx.core.net.toUri
 import com.android.deskclock.R
 import com.android.deskclock.homepage.MainActivity
 import com.android.deskclock.model.database.AlarmDatabase
+import java.io.File
 
 class AlarmNotificationUtil(
     private val context: Context,
     private val label: String,
     private var id: Int,
-    private val remindAction: Int
+    private val remindAction: Int,
+    private val audio: String
 ) {
     private val channelId = "com.android.deskclock.notification"
     private val channelName = "ShadowAlarm's normal notification"
@@ -30,14 +33,13 @@ class AlarmNotificationUtil(
     init {
         id = kotlin.math.abs(id)
         if (Build.VERSION.SDK_INT >= 26) {
-            val uri = Uri.parse("android.resource://" + context.packageName + "/" + R.raw.mlbq)
             val attribute = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_NOTIFICATION)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
             channel =
                 NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
             channel.apply {
                 enableVibration(true)
-                setSound(uri, attribute)
+                setSound(File(audio).toUri(), attribute)
                 vibrationPattern = longArrayOf(200, 400, 200, 400, 200, 400)
             }
             builder = Notification.Builder(context, channelId)
@@ -64,7 +66,7 @@ class AlarmNotificationUtil(
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .setFullScreenIntent(pendingIntent, true)
-            //.setOngoing(true)
+        //.setOngoing(true)
 
 
         if (Build.VERSION.SDK_INT < 26) {

@@ -2,18 +2,20 @@ package com.android.deskclock.util
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import com.android.deskclock.R
 
-class AlarmNotifyUtil(private val context: Context) {
+class AlarmNotifyUtil(private val context: Context, private val audioPath: String) {
     private lateinit var player: MediaPlayer
     private lateinit var vibration: Vibrator
 
     fun notifyAudioAndVibrate(action: Int) {
         if (action.and(0b01) != 0) {
-            player = MediaPlayer.create(context, R.raw.mlbq)
+            player = MediaPlayer()
+            player.setDataSource(audioPath)
             player.isLooping = true
             player.start()
         }

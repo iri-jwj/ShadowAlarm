@@ -35,7 +35,7 @@ class AddEditAct : BaseView<AddEditPresenter>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_edit)
         val tempIntent = intent
-        presenter = AddEditPresenter(tempIntent.action!!)
+        presenter = AddEditPresenter(tempIntent.action!!,this)
         presenter.start()
         when (tempIntent.action) {
             editAction -> handleEditAction(tempIntent)

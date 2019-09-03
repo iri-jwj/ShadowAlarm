@@ -14,7 +14,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     companion object {
         const val ACTION_DELAY = "com.android.deskclock.actionDelay"
-        private const val TAG = "AlarmReceiver"
+        //private const val TAG = "AlarmReceiver"
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -30,7 +30,12 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun handleDelayAlarmAction(context: Context?, intent: Intent) {
-        val newIntent = Intent(context, AlarmReceiver::class.java)
+        val newIntent = createNewIntent(
+            context!!,
+            intent,
+            AlarmReceiver::class.java,
+            AlarmManagerUtil.alarmAction
+        )
         newIntent.action = AlarmManagerUtil.alarmAction
         newIntent.putExtra("id", intent.getIntExtra("id", 0))
         newIntent.putExtra("label", intent.getStringExtra("label"))
@@ -49,7 +54,7 @@ class AlarmReceiver : BroadcastReceiver() {
             calender[Calendar.MINUTE] + 5,
             0
         )
-        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,
             calender.timeInMillis,
@@ -66,23 +71,21 @@ class AlarmReceiver : BroadcastReceiver() {
         val label = intent.getStringExtra("label")
         val id = intent.getIntExtra("id", 0)
         val remindAction = intent.getIntExtra("remindAction", 0)
+        val audioPath = intent.getStringExtra("audio")
         if (isScreenLighted and !isLocked) {
-            showAlarmByNotification(context, label, id, remindAction)
+            showAlarmByNotification(context, label, id, remindAction, audioPath)
         } else {
             //showAlarmByOverlayWindow(context, label, id)
-            showAlarmByActivity(context, label, id, remindAction)
+            showAlarmByActivity(context, intent)
         }
     }
 
-    private fun showAlarmByActivity(context: Context, label: String?, id: Int, remindAction: Int) {
-        val intent = Intent(context, LockedScreenAlarmActivity::class.java)
+    private fun showAlarmByActivity(context: Context, oldIntent: Intent) {
+        val intent =
+            createNewIntent(context, oldIntent, LockedScreenAlarmActivity::class.java, null)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra("label", label)
-        intent.putExtra("id", id)
-        intent.putExtra("remindAction", remindAction)
         context.startActivity(intent)
     }
-
 
     private fun showAlarmByOverlayWindow(context: Context, label: String?, id: Int?) {
         val intent = Intent(context, AlarmOverlayService::class.java)
@@ -95,14 +98,27 @@ class AlarmReceiver : BroadcastReceiver() {
         context: Context,
         label: String?,
         id: Int?,
-        remindAction: Int
+        remindAction: Int,
+        audioPath: String
     ) {
-
         val presenter = HomePagePresenter(context)
         presenter.start()
         presenter.setOnceAlarmFinished(id!!)
-        AlarmNotificationUtil(context, label!!, id, remindAction).showNotification()
+        AlarmNotificationUtil(context, label!!, id, remindAction, audioPath).showNotification()
     }
 
-
+    private fun <T : Any> createNewIntent(
+        context: Context,
+        oldIntent: Intent,
+        targetClass: Class<T>,
+        action: String?
+    ): Intent {
+        val intent = Intent(context, targetClass)
+        intent.action = action
+        intent.putExtra("id", oldIntent.getIntExtra("id", 0))
+        intent.putExtra("label", oldIntent.getStringExtra("label"))
+        intent.putExtra("remindAction", oldIntent.getIntExtra("remindAction", 0))
+        intent.putExtra("audio", oldIntent.getStringExtra("audio"))
+        return intent
+    }
 }
