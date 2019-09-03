@@ -42,7 +42,8 @@ object AlarmManagerUtil {
         if (old.label != new.label ||
             old.remindHours != new.remindHours ||
             old.remindMinutes != new.remindMinutes ||
-            old.remindAction != new.remindAction
+            old.remindAction != new.remindAction ||
+            old.remindAudioPath != new.remindAudioPath
         ) {
             needReplace = true
         }

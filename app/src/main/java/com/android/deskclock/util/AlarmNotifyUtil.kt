@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import com.android.deskclock.R
+import java.io.File
 
 class AlarmNotifyUtil(private val context: Context, private val audioPath: String) {
     private lateinit var player: MediaPlayer
@@ -14,10 +15,7 @@ class AlarmNotifyUtil(private val context: Context, private val audioPath: Strin
 
     fun notifyAudioAndVibrate(action: Int) {
         if (action.and(0b01) != 0) {
-            player = MediaPlayer()
-            player.setDataSource(audioPath)
-            player.isLooping = true
-            player.start()
+            notifyAudio()
         }
 
         if (action.and(0b10) != 0) {
@@ -36,8 +34,25 @@ class AlarmNotifyUtil(private val context: Context, private val audioPath: Strin
 
     }
 
+    private fun notifyAudio() {
+        player = MediaPlayer()
+        val file = File(audioPath)
+        if (file.exists()) {
+            player.setDataSource(audioPath)
+        } else {
+            player.setDataSource(
+                context,
+                Uri.parse("android.resource://${context.packageName}/${R.raw.mlbq}")
+            )
+        }
+        player.isLooping = true
+        player.prepare()
+        player.start()
+    }
+
     fun stopNotify() {
         player.stop()
+        player.reset()
         player.release()
         vibration.cancel()
     }

@@ -33,7 +33,9 @@ class AudioListAdapter(private val context: Context, private val selectedFile: F
         if (file.name != selectedFile.name) {
             fileList.add(file)
         }
-        fileList.add(selectedFile)
+        if (selectedFile.exists()) {
+            fileList.add(selectedFile)
+        }
     }
 
     fun setOnMusicFileSelectCallback(callback: (File) -> Unit) {
@@ -41,8 +43,8 @@ class AudioListAdapter(private val context: Context, private val selectedFile: F
     }
 
     fun addNewScannedFile(files: ArrayList<File>) {
-        for (i in files){
-            if(i.name == selectedFile.name){
+        for (i in files) {
+            if (i.name == selectedFile.name) {
                 files.remove(i)
                 break
             }
