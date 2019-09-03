@@ -1,21 +1,26 @@
 package com.android.deskclock.addeditpage.selectaudio
 
+import android.content.Context
+import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.android.deskclock.R
 import java.io.File
 
-class AudioListAdapter(private val selectedFile: File) :
+class AudioListAdapter(private val context: Context, private val selectedFile: File) :
     RecyclerView.Adapter<AudioListAdapter.AudioViewHolder>() {
 
     private val typeDir = 1
     private val typeMusic = 2
 
     private val fileList = ArrayList<File>()
+
+    private val mediaPlayer = MediaPlayer()
 
     private lateinit var selectedHolder: AudioViewHolder
 
@@ -24,6 +29,10 @@ class AudioListAdapter(private val selectedFile: File) :
     }
 
     init {
+        val file = File("${context.dataDir}/马林巴琴.mp3")
+        if (file.name != selectedFile.name) {
+            fileList.add(file)
+        }
         fileList.add(selectedFile)
     }
 
@@ -32,6 +41,12 @@ class AudioListAdapter(private val selectedFile: File) :
     }
 
     fun addNewScannedFile(files: ArrayList<File>) {
+        for (i in files){
+            if(i.name == selectedFile.name){
+                files.remove(i)
+                break
+            }
+        }
         val startIndex = fileList.size
         fileList.addAll(files)
         notifyItemRangeInserted(startIndex, files.size)
@@ -71,6 +86,17 @@ class AudioListAdapter(private val selectedFile: File) :
                 if (holder != selectedHolder) {
                     onMusicFileSelectedListener(file)
                     holder.setItemSelected()
+                    if (mediaPlayer.isPlaying) {
+                        mediaPlayer.stop()
+                    }
+                    try {
+                        mediaPlayer.reset()
+                        mediaPlayer.setDataSource(holder.itemView.context, file.toUri())
+                        mediaPlayer.prepare()
+                        mediaPlayer.start()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                     selectedHolder.setItemUnselected()
                     selectedHolder = holder
                 }
@@ -80,7 +106,11 @@ class AudioListAdapter(private val selectedFile: File) :
                 selectedHolder.setItemSelected()
             }
         }
+    }
 
+    fun releaseMedia() {
+        mediaPlayer.stop()
+        mediaPlayer.release()
     }
 
     class AudioViewHolder(audioView: View) : RecyclerView.ViewHolder(audioView) {

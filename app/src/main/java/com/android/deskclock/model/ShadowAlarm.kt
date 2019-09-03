@@ -40,6 +40,7 @@ data class ShadowAlarm(
             writeInt(remindMinutes)
             writeInt(remindDaysInWeek)
             writeInt(remindAction)
+            writeString(remindAudioPath)
             writeInt(enabled)
         }
     }

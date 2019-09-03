@@ -35,7 +35,7 @@ class AddEditAct : BaseView<AddEditPresenter>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_edit)
         val tempIntent = intent
-        presenter = AddEditPresenter(tempIntent.action!!,this)
+        presenter = AddEditPresenter(tempIntent.action!!, this)
         presenter.start()
         when (tempIntent.action) {
             editAction -> handleEditAction(tempIntent)
@@ -59,9 +59,7 @@ class AddEditAct : BaseView<AddEditPresenter>() {
                 finish()
             }
         }
-
         initView()
-
     }
 
     private fun handleEditAction(tempIntent: Intent?) {
@@ -135,6 +133,8 @@ class AddEditAct : BaseView<AddEditPresenter>() {
 
         findViewById<TextView>(R.id.add_edit_remind_action).text = presenter.getRemindActionText()
 
+        findViewById<TextView>(R.id.add_edit_audio).text = presenter.getRemindAudioName()
+
         findViewById<ViewGroup>(R.id.add_edit_label_layout).setOnClickListener {
             EditLabelFragment.setUpFragment(
                 supportFragmentManager,
@@ -170,7 +170,7 @@ class AddEditAct : BaseView<AddEditPresenter>() {
             SelectAudioFragment.setUpFragment(
                 supportFragmentManager,
                 R.id.container,
-                File("${dataDir.path}/马林巴琴.mp3")
+               File(presenter.getRemindAudioPath())
             ) {
                 handleNewAudioFile(it)
             }
@@ -178,7 +178,8 @@ class AddEditAct : BaseView<AddEditPresenter>() {
     }
 
     private fun handleNewAudioFile(it: File) {
-        Log.d("AddEditAct", it.name)
+        presenter.saveNewAudioFile(it)
+        findViewById<TextView>(R.id.add_edit_audio).text = it.name
     }
 
     private fun handelNewRemindAction(action: Int) {

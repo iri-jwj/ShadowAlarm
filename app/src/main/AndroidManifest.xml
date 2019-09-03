@@ -23,10 +23,15 @@
 
         <activity
             android:name=".util.LockedScreenAlarmActivity"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".addeditpage.AddEditAct" />
-        <activity android:name=".homepage.MainActivity">
+        <activity
+            android:name=".addeditpage.AddEditAct"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homepage.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

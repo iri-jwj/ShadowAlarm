@@ -60,7 +60,7 @@ class SelectAudioFragment(private val lastSelectedFile: File) : Fragment() {
 
     private fun initViewAndListener(rootView: View) {
         val recyclerView = rootView.findViewById<RecyclerView>(R.id.audio_list)
-        audioAdapter = AudioListAdapter(lastSelectedFile)
+        audioAdapter = AudioListAdapter(context!!,lastSelectedFile)
 
         audioAdapter.setOnMusicFileSelectCallback {
             selectResult = it
@@ -103,6 +103,11 @@ class SelectAudioFragment(private val lastSelectedFile: File) : Fragment() {
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        audioAdapter.releaseMedia()
+    }
+
     override fun onDestroy() {
         val intent = Intent(context, ScanAudioFileService::class.java)
         context?.stopService(intent)
@@ -112,11 +117,12 @@ class SelectAudioFragment(private val lastSelectedFile: File) : Fragment() {
     private fun addToList(list: ArrayList<File>) {
         audioAdapter.addNewScannedFile(list)
     }
+
     class MyHandler : Handler {
 
-        constructor():super()
+        constructor() : super()
 
-        constructor(looper:Looper):super(looper)
+        constructor(looper: Looper) : super(looper)
 
         override fun handleMessage(msg: Message?) {
             if (msg?.what == CODE_RECEIVED) {

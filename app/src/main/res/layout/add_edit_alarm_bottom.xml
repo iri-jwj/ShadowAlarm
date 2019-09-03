@@ -129,15 +129,25 @@
             android:id="@+id/add_edit_audio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_toStartOf="@id/third_arrow"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="@dimen/default_margin"
             android:layout_toEndOf="@id/add_edit_audio_text"
             android:gravity="end"
             android:text="@string/alarm_audio"
             android:textColor="@color/add_edit_sub_text"
             android:textSize="@dimen/notification_label" />
+
+        <ImageView
+            android:id="@+id/third_arrow"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:scaleType="centerInside"
+            android:src="@drawable/right_arrow" />
     </RelativeLayout>
 
     <View

@@ -3,6 +3,7 @@ package com.android.deskclock.addeditpage
 import android.content.Context
 import com.android.deskclock.BasePresenter
 import com.android.deskclock.model.ShadowAlarm
+import java.io.File
 import java.lang.StringBuilder
 import java.util.*
 
@@ -144,4 +145,17 @@ class AddEditPresenter(private val action: String, private val context: Context)
         }
         return builder.toString()
     }
+
+    fun saveNewAudioFile(file: File) {
+        mAlarm.remindAudioPath = file.path
+    }
+
+    fun getRemindAudioName(): String {
+        return File(mAlarm.remindAudioPath).name
+    }
+
+    fun getRemindAudioPath(): String? {
+        return mAlarm.remindAudioPath
+    }
+
 }
