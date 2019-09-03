@@ -5,10 +5,12 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.android.deskclock.BasePresenter
+import com.android.deskclock.R
 import com.android.deskclock.model.AlarmProvider
 import com.android.deskclock.model.ShadowAlarm
 import com.android.deskclock.model.database.AlarmDatabase
 import com.android.deskclock.util.AlarmManagerUtil
+import com.android.deskclock.util.CopyRawToData
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
@@ -26,6 +28,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
 
     override fun start() {
         alarmList = queryAlarms()
+        CopyRawToData.copyRawFile2Data(R.raw.mlbq, context.dataDir, "马林巴琴.mp3", context.resources)
         sortAlarmList()
     }
 

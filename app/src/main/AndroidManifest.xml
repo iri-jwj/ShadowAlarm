@@ -8,7 +8,9 @@
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -43,6 +45,7 @@
         </receiver>
 
         <service android:name=".util.AlarmOverlayService" />
+        <service android:name=".addeditpage.selectaudio.ScanAudioFileService" />
 
         <provider
             android:name=".model.AlarmProvider"

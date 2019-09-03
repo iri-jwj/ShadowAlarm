@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="22dp"
+    android:background="@color/app_dark_background"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/audio_package_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/listItemText"
+        android:layout_marginStart="@dimen/ex_margin"
+        android:textSize="@dimen/notification_label" />
+
+</LinearLayout>

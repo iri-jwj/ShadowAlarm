@@ -2,14 +2,21 @@ package com.android.deskclock.addeditpage
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import android.widget.TextView
+import android.widget.Toast
 import com.android.deskclock.BaseView
 import com.android.deskclock.R
+import com.android.deskclock.addeditpage.selectaudio.ScanAudioFileService
+import com.android.deskclock.addeditpage.selectaudio.SelectAudioFragment
 import com.android.deskclock.customview.UselessToolbar
 import com.android.deskclock.model.ShadowAlarm
+import java.io.File
 
 
 class AddEditAct : BaseView<AddEditPresenter>() {
@@ -157,6 +164,21 @@ class AddEditAct : BaseView<AddEditPresenter>() {
                 handelNewRemindAction(it)
             }
         }
+
+
+        findViewById<ViewGroup>(R.id.add_edit_audio_layout).setOnClickListener {
+            SelectAudioFragment.setUpFragment(
+                supportFragmentManager,
+                R.id.container,
+                File("${dataDir.path}/马林巴琴.mp3")
+            ) {
+                handleNewAudioFile(it)
+            }
+        }
+    }
+
+    private fun handleNewAudioFile(it: File) {
+        Log.d("AddEditAct", it.name)
     }
 
     private fun handelNewRemindAction(action: Int) {
@@ -172,5 +194,23 @@ class AddEditAct : BaseView<AddEditPresenter>() {
     private fun handelNewRepeat(repeat: Int) {
         presenter.saveNewEditRepeat(repeat)
         findViewById<TextView>(R.id.add_edit_repeat).text = presenter.getRepeatDays()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 101) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                val intent = Intent(this, ScanAudioFileService::class.java)
+                intent.putExtra("filePath", Environment.getExternalStorageDirectory().absolutePath)
+                startService(intent)
+            } else {
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
+
+            }
+        }
     }
 }

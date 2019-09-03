@@ -108,6 +108,7 @@
         android:background="@color/divider_line" />
 
     <RelativeLayout
+        android:id="@+id/add_edit_audio_layout"
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:orientation="horizontal">

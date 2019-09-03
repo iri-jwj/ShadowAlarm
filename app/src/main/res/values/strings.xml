@@ -25,4 +25,6 @@
 
     <string name="label_hint">键入标题~</string>
 
+    <string name="alarm_audio_title">选择铃声</string>
+
 </resources>
