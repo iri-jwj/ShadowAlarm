@@ -97,6 +97,15 @@ class AlarmProvider : ContentProvider() {
                 try {
                     writableDb = mDatabase.writableDatabase
                     writableDb?.beginTransaction()
+
+                    val cursor = writableDb?.query(AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME, arrayOf(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED),p2,p3,null,null,null)
+                    cursor?.moveToNext()
+                    val isEnable = cursor?.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)) == 1
+                    if (isEnable && !p1!!.getAsBoolean(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)){
+                        context?.contentResolver?.notifyChange(p0,null)
+                    }
+                    cursor?.close()
+
                     result = writableDb?.update(
                         AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME, p1, p2,
                         p3

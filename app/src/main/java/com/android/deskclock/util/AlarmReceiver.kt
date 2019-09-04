@@ -36,9 +36,6 @@ class AlarmReceiver : BroadcastReceiver() {
             AlarmReceiver::class.java,
             AlarmManagerUtil.alarmAction
         )
-        newIntent.action = AlarmManagerUtil.alarmAction
-        newIntent.putExtra("id", intent.getIntExtra("id", 0))
-        newIntent.putExtra("label", intent.getStringExtra("label"))
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             intent.getIntExtra("id", 0),

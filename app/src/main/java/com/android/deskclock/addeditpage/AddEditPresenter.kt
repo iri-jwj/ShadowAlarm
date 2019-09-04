@@ -7,7 +7,7 @@ import java.io.File
 import java.lang.StringBuilder
 import java.util.*
 
-class AddEditPresenter(private val action: String, private val context: Context) : BasePresenter() {
+class AddEditPresenter(private val action: String, private val context: Context) : BasePresenter {
 
     private lateinit var mAlarm: ShadowAlarm
 

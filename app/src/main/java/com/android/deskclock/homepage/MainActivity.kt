@@ -4,7 +4,10 @@ import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +24,7 @@ class MainActivity : BaseView<HomePagePresenter>() {
     companion object {
         private const val addNewAlarmCode = 100
         const val editAlarmCode = 101
+        const val OPEN_OVERLAY_WINDOW = "openOverlayWindow"
     }
 
     private val mAdapter = AlarmsAdapter(this)
@@ -30,17 +34,22 @@ class MainActivity : BaseView<HomePagePresenter>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mPresenter = HomePagePresenter(this)
+        mPresenter.start()
+        mPresenter.setCallback {
+            mAdapter.refreshAlarmList(mPresenter.refreshAlarms())
+        }
+
         if (intent != null) {
             val id = intent.getIntExtra(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ID, 0)
             val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             if (id != 0) {
                 nm.cancel(id)
             }
+            mPresenter.showIfNeedOverlayWindow(intent)
         }
 
         AlarmManagerUtil.setUpWithContext(this)
-        mPresenter = HomePagePresenter(this)
-        mPresenter.start()
 
         val toolbar = findViewById<UselessToolbar>(R.id.toolbar)
         toolbar.apply {
@@ -60,7 +69,7 @@ class MainActivity : BaseView<HomePagePresenter>() {
                 if (b != shadowAlarm.isEnabled) {
                     val alarmCopy = shadowAlarm.getNewCopy()
                     alarmCopy.isEnabled = b
-                    mAdapter.refreshAlarmList(mPresenter.updateAlarm(alarmCopy,true))
+                    mAdapter.refreshAlarmList(mPresenter.updateAlarm(alarmCopy, true))
                 }
             }
             setOnItemDeleteCallback {
@@ -100,7 +109,7 @@ class MainActivity : BaseView<HomePagePresenter>() {
                 editAlarmCode -> {
                     val alarm = data?.getParcelableExtra<ShadowAlarm>("alarm")
                     if (alarm != null)
-                        mAdapter.refreshAlarmList(mPresenter.updateAlarm(alarm,false))
+                        mAdapter.refreshAlarmList(mPresenter.updateAlarm(alarm, false))
                 }
             }
         }

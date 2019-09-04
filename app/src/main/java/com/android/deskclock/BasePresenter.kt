@@ -1,5 +1,5 @@
 package com.android.deskclock
 
-abstract class BasePresenter {
+interface BasePresenter {
     abstract fun start()
 }

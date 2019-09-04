@@ -2,8 +2,14 @@ package com.android.deskclock.homepage
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.database.ContentObservable
+import android.database.ContentObserver
 import android.net.Uri
+import android.os.Handler
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import com.android.deskclock.BasePresenter
 import com.android.deskclock.R
 import com.android.deskclock.model.AlarmProvider
@@ -11,11 +17,21 @@ import com.android.deskclock.model.ShadowAlarm
 import com.android.deskclock.model.database.AlarmDatabase
 import com.android.deskclock.util.AlarmManagerUtil
 import com.android.deskclock.util.CopyRawToData
+import com.android.deskclock.util.OverlayWindowUtil
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
 
-class HomePagePresenter(private val context: Context) : BasePresenter() {
+class HomePagePresenter(private val context: Context) : BasePresenter,
+    ContentObserver(Handler(context.mainLooper)) {
+    override fun onChange(selfChange: Boolean) {
+        super.onChange(selfChange)
+        onOnceAlarmFinishedCallback()
+    }
+
+    override fun deliverSelfNotifications(): Boolean {
+        return true
+    }
 
     private val tag = "HomePagePresenter"
 
@@ -26,10 +42,19 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
 
     private var isFiltered = false
 
+    private var onOnceAlarmFinishedCallback: () -> Unit = {
+
+    }
+
     override fun start() {
         alarmList = queryAlarms()
         CopyRawToData.copyRawFile2Data(R.raw.mlbq, context.dataDir, "马林巴琴.mp3", context.resources)
         sortAlarmList()
+        resolver.registerContentObserver(uri,true,this)
+    }
+
+    fun setCallback(callback: () -> Unit) {
+        onOnceAlarmFinishedCallback = callback
     }
 
     fun deleteAlarm(shadowAlarm: ShadowAlarm): List<ShadowAlarm> {
@@ -146,9 +171,13 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
         return alarmList
     }
 
-    /**
-     *
-     */
+    fun refreshAlarms():List<ShadowAlarm>{
+        (alarmList as ArrayList).clear()
+        alarmList = queryAlarms()
+        sortAlarmList()
+        return alarmList
+    }
+
     fun setOnceAlarmFinished(id: Int) {
         for (alarm in alarmList) {
             if (abs(alarm.id.hashCode()) == id && alarm.remindDaysInWeek == 0) {
@@ -161,6 +190,21 @@ class HomePagePresenter(private val context: Context) : BasePresenter() {
                 )
                 updateAlarm(alarm, true)
             }
+        }
+    }
+
+    fun showIfNeedOverlayWindow(intent: Intent?) {
+        if (intent?.action == MainActivity.OPEN_OVERLAY_WINDOW) {
+            val id = intent.getIntExtra(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ID, 0)
+            val label = intent.getStringExtra(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL)
+            val remindAction =
+                intent.getIntExtra(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION, 0)
+            val remindAudio =
+                intent.getStringExtra(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_AUDIO)
+
+            val util = OverlayWindowUtil(context, label, null)
+            util.setAlarmInfo(id, remindAction, remindAudio)
+            util.showFloatingView()
         }
     }
 }

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import androidx.core.net.toUri
 import com.android.deskclock.R
 import java.io.File
 
@@ -23,12 +24,12 @@ class AlarmNotifyUtil(private val context: Context, private val audioPath: Strin
             if (Build.VERSION.SDK_INT >= 26) {
                 vibration.vibrate(
                     VibrationEffect.createWaveform(
-                        longArrayOf(100, 200, 100, 200),
+                        longArrayOf(200, 400, 200, 400, 200, 400),
                         0
                     )
                 )
             } else {
-                vibration.vibrate(longArrayOf(100, 200, 100, 200), 0)
+                vibration.vibrate(longArrayOf(200, 400, 200, 400, 200, 400), 0)
             }
         }
 
@@ -38,7 +39,7 @@ class AlarmNotifyUtil(private val context: Context, private val audioPath: Strin
         player = MediaPlayer()
         val file = File(audioPath)
         if (file.exists()) {
-            player.setDataSource(audioPath)
+            player.setDataSource(file.toUri().toString())
         } else {
             player.setDataSource(
                 context,

@@ -236,6 +236,11 @@ object AlarmManagerUtil {
         }
     }
 
+    private fun checkIsNearestAlarm(){
+        val current = System.currentTimeMillis()
+
+    }
+
     private fun <T : Any> getIntent(
         context: Context,
         shadowAlarm: ShadowAlarm,
