@@ -51,7 +51,7 @@ object AlarmManagerUtil {
         var resultFlags: IntArray? = null
 
         if (oldFlags != newFlags) {
-            resultFlags = calUpdatedFlags(oldFlags, newFlags)
+            resultFlags = calUpdateFlags(oldFlags, newFlags)
             needReplace = true
         }
 
@@ -96,7 +96,7 @@ object AlarmManagerUtil {
         }
     }
 
-    private fun calUpdatedFlags(oldFlags: Int, newFlags: Int): IntArray {
+    private fun calUpdateFlags(oldFlags: Int, newFlags: Int): IntArray {
         val result = IntArray(2)
         val changedFlags = oldFlags.xor(newFlags)
         var needCancelFlags = 0
@@ -165,7 +165,6 @@ object AlarmManagerUtil {
         minutes: Int,
         remindFlags: Int
     ) {
-
         val calendar = Calendar.getInstance()
         if ((calendar[Calendar.HOUR_OF_DAY] > hour) or
             ((calendar[Calendar.HOUR_OF_DAY] == hour) and (calendar[Calendar.MINUTE] > minutes))
@@ -187,10 +186,6 @@ object AlarmManagerUtil {
             val pendingIntent =
                 PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_ONE_SHOT)
             mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-            Log.d(
-                TAG,
-                "in set once alarm time = ${calendar.timeInMillis - System.currentTimeMillis()}"
-            )
         } else {
             if (remindFlags == EVERYDAY) {
                 val pendingIntent =
@@ -206,7 +201,6 @@ object AlarmManagerUtil {
                     24 * 60 * 60 * 1000,
                     pendingIntent
                 )
-                Log.d(TAG, "in set repeat alarm")
 
             } else {
                 for (i in 1..7) {
@@ -229,9 +223,6 @@ object AlarmManagerUtil {
                         )
                     }
                 }
-                Log.d(TAG, "in set repeat alarm")
-
-
             }
         }
     }
@@ -282,6 +273,5 @@ object AlarmManagerUtil {
 
         return calendar.timeInMillis
     }
-
 
 }

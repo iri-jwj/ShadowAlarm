@@ -26,7 +26,7 @@ class OverlayWindowUtil(
     private var onNegativeClicked: () -> Unit = {}
     private var onPositiveClicked: () -> Unit = {}
 
-    fun setOnNegativeClickedListener(onNegativeClicked: () -> Unit): OverlayWindowUtil {
+    fun setOnNegativeClicked(onNegativeClicked: () -> Unit): OverlayWindowUtil {
         this.onNegativeClicked = onNegativeClicked
         return this
     }

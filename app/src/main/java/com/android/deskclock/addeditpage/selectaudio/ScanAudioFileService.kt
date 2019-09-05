@@ -5,7 +5,6 @@ import android.content.Intent
 import java.io.File
 import java.io.FileFilter
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 
 class ScanAudioFileService : IntentService {
@@ -27,16 +26,12 @@ class ScanAudioFileService : IntentService {
         !it.name.startsWith(".") && (it.isDirectory)
     }
 
-    private val mResultList = CopyOnWriteArrayList<File>()
     private val mWaitForScanDir = ConcurrentLinkedQueue<File>()
     private val fixedThreadPool =
         Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() - 1)
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (fixedThreadPool.isShutdown) {
-            if (mResultList.size != 0) {
-                mResultList.clear()
-            }
             if (mWaitForScanDir.size != 0) {
                 mWaitForScanDir.clear()
             }
@@ -72,9 +67,8 @@ class ScanAudioFileService : IntentService {
         }
 
         if (musicFileList != null) {
-            sendResultToMain(musicFileList)
+            sendResultToView(musicFileList)
         }
-
 
         startScanInternal(dirs)
     }
@@ -115,14 +109,14 @@ class ScanAudioFileService : IntentService {
                     }
                 }
                 if (musicFileList != null) {
-                    sendResultToMain(musicFileList)
+                    sendResultToView(musicFileList)
                 }
             }
         }
 
     }
 
-    private fun sendResultToMain(resultList: List<File>) {
+    private fun sendResultToView(resultList: List<File>) {
         val mainHandler = SelectAudioFragment.MyHandler(mainLooper)
         val m = mainHandler.obtainMessage()
         m.what = SelectAudioFragment.CODE_RECEIVED

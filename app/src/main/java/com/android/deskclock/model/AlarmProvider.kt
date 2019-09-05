@@ -80,7 +80,7 @@ class AlarmProvider : ContentProvider() {
                     writableDb?.close()
                 }
             } else {
-            return null
+                return null
             }
         }
     }
@@ -98,13 +98,7 @@ class AlarmProvider : ContentProvider() {
                     writableDb = mDatabase.writableDatabase
                     writableDb?.beginTransaction()
 
-                    val cursor = writableDb?.query(AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME, arrayOf(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED),p2,p3,null,null,null)
-                    cursor?.moveToNext()
-                    val isEnable = cursor?.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)) == 1
-                    if (isEnable && !p1!!.getAsBoolean(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)){
-                        context?.contentResolver?.notifyChange(p0,null)
-                    }
-                    cursor?.close()
+                    checkIfOnlyEnableChanged(writableDb, p2, p3, p1, p0)
 
                     result = writableDb?.update(
                         AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME, p1, p2,
@@ -119,6 +113,51 @@ class AlarmProvider : ContentProvider() {
             }
             return result!!
         }
+    }
+
+    private fun checkIfOnlyEnableChanged(
+        writableDb: SQLiteDatabase?, where: String?, whereArgs: Array<out String>?,
+        contentValues: ContentValues?, uri: Uri
+    ) {
+        val cursor = writableDb?.query(
+            AlarmDatabase.AlarmDatabaseEntity.TABLE_NAME,
+            null,
+            where,
+            whereArgs,
+            null,
+            null,
+            null
+        )
+        val isEnable: Boolean
+        if (cursor != null) {
+            cursor.moveToNext()
+            isEnable =
+                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)) == 1
+            val label =
+                cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL))
+            val hour =
+                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR))
+            val minute =
+                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE))
+            val remindDayOfWeek =
+                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK))
+            val remindAction =
+                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION))
+            val remindAudio =
+                cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_AUDIO))
+
+            if (isEnable && !contentValues!!.getAsBoolean(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)
+                && label == contentValues.getAsString(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL)
+                && hour == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR)
+                && minute == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE)
+                && remindDayOfWeek == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK)
+                && remindAction == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION)
+                && remindAudio == contentValues.getAsString(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_AUDIO)
+            ) {
+                context?.contentResolver?.notifyChange(uri, null)
+            }
+        }
+        cursor?.close()
     }
 
     override fun delete(p0: Uri, p1: String?, p2: Array<out String>?): Int {
