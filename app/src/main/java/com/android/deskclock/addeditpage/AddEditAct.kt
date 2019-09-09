@@ -219,7 +219,7 @@ class AddEditAct : BaseView<AddEditPresenter>() {
         val fragment = supportFragmentManager.findFragmentById(R.id.container)
 
         if (fragment != null && fragment.isVisible) {
-            supportFragmentManager.beginTransaction().remove(fragment).commit()
+            supportFragmentManager.beginTransaction().setCustomAnimations(0,R.anim.fragment_slide_out).remove(fragment).commit()
         } else {
             super.onBackPressed()
         }

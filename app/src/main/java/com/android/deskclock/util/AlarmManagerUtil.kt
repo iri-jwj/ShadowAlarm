@@ -120,7 +120,7 @@ object AlarmManagerUtil {
     private fun cancelAlarm(shadowAlarm: ShadowAlarm, needCancelFlags: Int) {
         val intId = abs(shadowAlarm.id.hashCode())
 
-        if (needCancelFlags == 0) {
+        if (needCancelFlags == 0 || needCancelFlags == EVERYDAY) {
 
             val intent = getIntent(mContext, shadowAlarm, AlarmReceiver::class.java)
             val pendingIntent =

@@ -58,7 +58,7 @@ class ScanAudioFileService : IntentService {
         val musicFiles = file.listFiles(fileNameFilter)
 
         var musicFileList: List<File>? = null
-        if (musicFiles.isNotEmpty()) {
+        if (musicFiles != null && musicFiles.isNotEmpty()) {
             musicFileList = ArrayList()
             (musicFileList as ArrayList).add(file)
             for (mf in musicFiles) {

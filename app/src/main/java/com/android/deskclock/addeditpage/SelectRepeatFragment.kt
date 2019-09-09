@@ -27,13 +27,15 @@ class SelectRepeatFragment(private val hasSelectedDays: Int) : Fragment() {
             mManager = manager
             selectDayCallback = callback
             instance = SelectRepeatFragment(selectedDays)
-            mManager.beginTransaction().add(container, instance, AddEditAct.selectRepeatTag)
+            mManager.beginTransaction().setCustomAnimations(R.anim.fragmen_slide_in, 0)
+                .add(container, instance, AddEditAct.selectRepeatTag)
                 .commit()
         }
 
         private fun hideSelf(result: Int) {
             selectDayCallback(result)
-            mManager.beginTransaction().remove(instance).commit()
+            mManager.beginTransaction().setCustomAnimations(0, R.anim.fragment_slide_out)
+                .remove(instance).commit()
         }
     }
 

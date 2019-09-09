@@ -33,6 +33,7 @@ class EditLabelFragment(private val label: String) : Fragment() {
             mManager = manager
             labelChangedCallback = callback
             val transaction = mManager.beginTransaction()
+                .setCustomAnimations(R.anim.fragmen_slide_in, 0)
             transaction.add(container, instance, AddEditAct.editLabelTag).commit()
         }
 
@@ -45,7 +46,7 @@ class EditLabelFragment(private val label: String) : Fragment() {
             if (imm.isActive) {
                 imm.hideSoftInputFromWindow(instance.view?.applicationWindowToken, 0)
             }
-            mManager.beginTransaction().remove(instance).commit()
+            mManager.beginTransaction().setCustomAnimations(0,R.anim.fragment_slide_out).remove(instance).commit()
         }
     }
 

@@ -32,14 +32,16 @@ class SelectAudioFragment(private val lastSelectedFile: File) : Fragment() {
             hasSelectedFile = selectedFile
             onAudioFileSelectedCallback = callback
             instance = SelectAudioFragment(hasSelectedFile)
-            manager.beginTransaction().add(container, instance).commit()
+            manager.beginTransaction().setCustomAnimations(R.anim.fragmen_slide_in, 0)
+                .add(container, instance).commit()
         }
 
         fun hideSelf(resultFile: File) {
             if (resultFile != hasSelectedFile) {
                 onAudioFileSelectedCallback(resultFile)
             }
-            mManager.beginTransaction().remove(instance).commit()
+            mManager.beginTransaction().setCustomAnimations(0, R.anim.fragment_slide_out)
+                .remove(instance).commit()
         }
 
 
@@ -60,7 +62,7 @@ class SelectAudioFragment(private val lastSelectedFile: File) : Fragment() {
 
     private fun initViewAndListener(rootView: View) {
         val recyclerView = rootView.findViewById<RecyclerView>(R.id.audio_list)
-        audioAdapter = AudioListAdapter(context!!,lastSelectedFile)
+        audioAdapter = AudioListAdapter(context!!, lastSelectedFile)
 
         audioAdapter.setOnMusicFileSelectCallback {
             selectResult = it
