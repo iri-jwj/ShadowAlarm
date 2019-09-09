@@ -170,7 +170,7 @@ class AddEditAct : BaseView<AddEditPresenter>() {
             SelectAudioFragment.setUpFragment(
                 supportFragmentManager,
                 R.id.container,
-               File(presenter.getRemindAudioPath())
+                File(presenter.getRemindAudioPath())
             ) {
                 handleNewAudioFile(it)
             }
@@ -212,6 +212,16 @@ class AddEditAct : BaseView<AddEditPresenter>() {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
 
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.container)
+
+        if (fragment != null && fragment.isVisible) {
+            supportFragmentManager.beginTransaction().remove(fragment).commit()
+        } else {
+            super.onBackPressed()
         }
     }
 }

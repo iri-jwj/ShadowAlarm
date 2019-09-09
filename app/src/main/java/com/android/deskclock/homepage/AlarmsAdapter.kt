@@ -81,8 +81,8 @@ class AlarmsAdapter(private val activity: Activity) :
         holder.itemView.setOnLongClickListener {
             OverlayWindowUtil(
                 activity,
-                "Delete Alert",
-                "confirm to delete ${alarm.label}?"
+                "删除警告",
+                "确认删除： ${alarm.label}?"
             ).setOnPositiveClicked {
                 onItemDeleteCallback(alarm)
             }.showFloatingView()

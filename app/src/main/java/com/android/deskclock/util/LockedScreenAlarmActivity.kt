@@ -15,6 +15,7 @@ import com.android.deskclock.homepage.HomePagePresenter
 class LockedScreenAlarmActivity : AppCompatActivity() {
 
     private lateinit var wakeLock: PowerManager.WakeLock
+    private lateinit var util:AlarmNotifyUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +30,7 @@ class LockedScreenAlarmActivity : AppCompatActivity() {
         checkInfoValid(label, id)
 
 
-        val util = AlarmNotifyUtil(this, audioPath)
-        util.notifyAudioAndVibrate(intent.getIntExtra("remindAction", 0))
+        util = AlarmNotifyUtil(this, audioPath)
 
         findViewById<TextView>(R.id.lock_screen_label).text = label
 
@@ -64,6 +64,11 @@ class LockedScreenAlarmActivity : AppCompatActivity() {
             finish()
         }
         turnOnScreen()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        util.notifyAudioAndVibrate(intent.getIntExtra("remindAction", 0))
     }
 
     private fun checkInfoValid(label: String?, id: Int) {

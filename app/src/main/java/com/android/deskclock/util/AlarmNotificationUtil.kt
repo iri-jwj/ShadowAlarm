@@ -95,7 +95,8 @@ class AlarmNotificationUtil(
                     channel = NotificationChannel(
                         noTipChannelId,
                         noTipChannelName,
-                        NotificationManager.IMPORTANCE_DEFAULT
+                        NotificationManager.IMPORTANCE_HIGH
+
                     )
                     channel.apply {
                         setSound(null, null)

@@ -37,21 +37,24 @@ class UselessToolbar : ViewGroup {
         var array: TypedArray? = null
         try {
             array = context.obtainStyledAttributes(attrs, R.styleable.UselessToolbar)
-            title = array?.getString(R.styleable.UselessToolbar_title)
-            leftText = array?.getString(R.styleable.UselessToolbar_left_text)
-            rightText = array?.getString(R.styleable.UselessToolbar_right_text)
-            leftIcon = array?.getResourceId(R.styleable.UselessToolbar_left_image, 0)
-            rightIcon = array?.getResourceId(R.styleable.UselessToolbar_right_image, 0)
+            array.apply {
+                title = getString(R.styleable.UselessToolbar_title)
+                leftText = getString(R.styleable.UselessToolbar_left_text)
+                rightText = getString(R.styleable.UselessToolbar_right_text)
+                leftIcon = getResourceId(R.styleable.UselessToolbar_left_image, 0)
+                rightIcon = getResourceId(R.styleable.UselessToolbar_right_image, 0)
+            }
         } finally {
             array?.recycle()
         }
         toolbarView = LayoutInflater.from(context).inflate(R.layout.useless_tool_bar, this, false)
-        titleView = toolbarView.findViewById(R.id.toolbar_title)
-        leftTextView = toolbarView.findViewById(R.id.toolbar_left_text)
-        leftImageView = toolbarView.findViewById(R.id.toolbar_image_left)
-        rightTextView = toolbarView.findViewById(R.id.toolbar_right_text)
-        rightImageView = toolbarView.findViewById(R.id.toolbar_image_right)
-
+        toolbarView.apply {
+            titleView = findViewById(R.id.toolbar_title)
+            leftTextView = findViewById(R.id.toolbar_left_text)
+            leftImageView = findViewById(R.id.toolbar_image_left)
+            rightTextView = findViewById(R.id.toolbar_right_text)
+            rightImageView = findViewById(R.id.toolbar_image_right)
+        }
         addView(toolbarView)
         initToolbarView()
     }

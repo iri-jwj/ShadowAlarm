@@ -183,11 +183,14 @@ object AlarmManagerUtil {
         )
 
         if (remindFlags == 0) {
+            Log.d("AlarmManagerUtil", "set exact time: ${calendar.timeInMillis - System.currentTimeMillis()}")
             val pendingIntent =
                 PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_ONE_SHOT)
             mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
         } else {
             if (remindFlags == EVERYDAY) {
+                Log.d("AlarmManagerUtil", "set Every day time: ${calendar.timeInMillis - System.currentTimeMillis()}")
+
                 val pendingIntent =
                     PendingIntent.getBroadcast(
                         mContext,
@@ -204,6 +207,8 @@ object AlarmManagerUtil {
 
             } else {
                 for (i in 1..7) {
+                    Log.d("AlarmManagerUtil", "set target time: ${calendar.timeInMillis - System.currentTimeMillis()},i = $i")
+
                     var temp = 1
                     temp = temp.shl(i - 1)
                     if (remindFlags.and(temp) != 0) {
@@ -227,7 +232,7 @@ object AlarmManagerUtil {
         }
     }
 
-    private fun checkIsNearestAlarm(){
+    private fun checkIsNearestAlarm() {
         val current = System.currentTimeMillis()
 
     }
@@ -268,9 +273,10 @@ object AlarmManagerUtil {
             calendar[Calendar.MONTH],
             calendar[Calendar.DAY_OF_MONTH],
             hours,
-            minutes
+            minutes,
+            0
         )
-
+        Log.d("AlarmManagerUtil", "time: ${calendar.timeInMillis - System.currentTimeMillis()}")
         return calendar.timeInMillis
     }
 

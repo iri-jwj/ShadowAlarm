@@ -15,7 +15,6 @@ import android.widget.TextView
 import com.android.deskclock.R
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
-import android.view.animation.TranslateAnimation
 
 
 class OverlayWindowUtil(
@@ -112,7 +111,7 @@ class OverlayWindowUtil(
     }
 
     private fun applyAnimation(alarmImage: ImageView) {
-        val alphaAnimation2 = RotateAnimation(
+        val alarmRotateAnimation = RotateAnimation(
             -10f,
             10f,
             Animation.RELATIVE_TO_SELF,
@@ -120,11 +119,13 @@ class OverlayWindowUtil(
             Animation.RELATIVE_TO_SELF,
             0.5f
         )
-        alphaAnimation2.duration = 60
-        alphaAnimation2.repeatCount = Animation.INFINITE
-        alphaAnimation2.repeatMode = Animation.REVERSE
-        alarmImage.animation = alphaAnimation2
-        alphaAnimation2.start()
+        alarmRotateAnimation.apply {
+            duration = 60
+            repeatCount = Animation.INFINITE
+            repeatMode = Animation.REVERSE
+        }
+        alarmImage.animation = alarmRotateAnimation
+        alarmRotateAnimation.start()
     }
 
     private fun tipRequestPermission() {

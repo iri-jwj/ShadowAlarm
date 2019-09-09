@@ -3,13 +3,10 @@ package com.android.deskclock.homepage
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.database.ContentObservable
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import com.android.deskclock.BasePresenter
 import com.android.deskclock.R
 import com.android.deskclock.model.AlarmProvider
@@ -50,7 +47,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
         alarmList = queryAlarms()
         CopyRawToData.copyRawFile2Data(R.raw.mlbq, context.dataDir, "马林巴琴.mp3", context.resources)
         sortAlarmList()
-        resolver.registerContentObserver(uri,true,this)
+        resolver.registerContentObserver(uri, true, this)
     }
 
     fun setCallback(callback: () -> Unit) {
@@ -68,7 +65,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
         if (shadowAlarm.isEnabled) {
             AlarmManagerUtil.cancelAlarm(shadowAlarm)
         }
-
+        isFiltered = false
         return alarmList
     }
 
@@ -98,6 +95,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
             }
             AlarmManagerUtil.updateAlarm(oldCopy, shadowAlarm)
         }
+        isFiltered = false
         return alarmList
     }
 
@@ -106,6 +104,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
         (alarmList as ArrayList).add(shadowAlarm)
         sortAlarmList()
         AlarmManagerUtil.setAlarm(shadowAlarm)
+        isFiltered = false
         return alarmList
     }
 
@@ -171,7 +170,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
         return alarmList
     }
 
-    fun refreshAlarms():List<ShadowAlarm>{
+    fun refreshAlarms(): List<ShadowAlarm> {
         (alarmList as ArrayList).clear()
         alarmList = queryAlarms()
         sortAlarmList()

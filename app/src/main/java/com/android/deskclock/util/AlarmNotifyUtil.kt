@@ -13,26 +13,31 @@ import java.io.File
 class AlarmNotifyUtil(private val context: Context, private val audioPath: String) {
     private lateinit var player: MediaPlayer
     private lateinit var vibration: Vibrator
+    private var action = 0
+    private var isNotify = false
 
     fun notifyAudioAndVibrate(action: Int) {
-        if (action.and(0b01) != 0) {
-            notifyAudio()
-        }
-
-        if (action.and(0b10) != 0) {
-            vibration = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            if (Build.VERSION.SDK_INT >= 26) {
-                vibration.vibrate(
-                    VibrationEffect.createWaveform(
-                        longArrayOf(200, 400, 200, 400, 200, 400),
-                        0
-                    )
-                )
-            } else {
-                vibration.vibrate(longArrayOf(200, 400, 200, 400, 200, 400), 0)
+        this.action = action
+        if (!isNotify) {
+            if (action.and(0b01) != 0) {
+                notifyAudio()
             }
-        }
 
+            if (action.and(0b10) != 0) {
+                vibration = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                if (Build.VERSION.SDK_INT >= 26) {
+                    vibration.vibrate(
+                        VibrationEffect.createWaveform(
+                            longArrayOf(200, 400, 200, 400, 200, 400),
+                            0
+                        )
+                    )
+                } else {
+                    vibration.vibrate(longArrayOf(200, 400, 200, 400, 200, 400), 0)
+                }
+            }
+            isNotify = true
+        }
     }
 
     private fun notifyAudio() {
@@ -52,9 +57,13 @@ class AlarmNotifyUtil(private val context: Context, private val audioPath: Strin
     }
 
     fun stopNotify() {
-        player.stop()
-        player.reset()
-        player.release()
-        vibration.cancel()
+        if (action.and(0b01) != 0) {
+            player.stop()
+            player.reset()
+            player.release()
+        }
+        if (action.and(0b10) != 0) {
+            vibration.cancel()
+        }
     }
 }
