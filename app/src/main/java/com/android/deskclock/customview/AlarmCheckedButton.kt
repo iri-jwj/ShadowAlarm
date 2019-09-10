@@ -20,16 +20,4 @@ class AlarmCheckedButton : View {
     )
 
 
-    override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
-    }
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    }
-
 }

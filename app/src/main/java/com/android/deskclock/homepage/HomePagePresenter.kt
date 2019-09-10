@@ -78,8 +78,9 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
             "id = ?",
             arrayOf(shadowAlarm.id.toString())
         )
+        var old:ShadowAlarm? = null
         if (result > 0) {
-            val old = alarmList.find {
+            old = alarmList.find {
                 shadowAlarm.id == it.id
             }
             val oldCopy = old!!.getNewCopy()
@@ -96,7 +97,7 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
             }
             AlarmManagerUtil.updateAlarm(oldCopy, shadowAlarm)
         }
-        val index = alarmList.indexOf(shadowAlarm)
+        val index = alarmList.indexOf(old)
         isFiltered = false
         return arrayOf(shadowAlarm, index)
     }

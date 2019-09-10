@@ -57,7 +57,8 @@ class AlarmNotificationUtil(
                             Uri.parse("android.resource://${context.packageName}/${R.raw.mlbq}"),
                             attribute
                         )
-                        vibrationPattern = longArrayOf(200, 400, 200, 400, 200, 400)
+                        vibrationPattern =
+                            longArrayOf(200, 400, 200, 400, 200, 400, 200, 400, 200, 400, 200, 400)
                     }
                 }
                 remindAction.and(0b01) != 0 -> {
@@ -88,7 +89,8 @@ class AlarmNotificationUtil(
                             null
                         )
                         enableVibration(true)
-                        vibrationPattern = longArrayOf(200, 400, 200, 400, 200, 400)
+                        vibrationPattern =
+                            longArrayOf(200, 400, 200, 400, 200, 400, 200, 400, 200, 400, 200, 400)
                     }
                 }
                 else -> {
@@ -155,7 +157,22 @@ class AlarmNotificationUtil(
                 notificationBuilder.setSound(uri, attribute)
             }
             if (remindAction.and(0b10) != 0) {
-                notificationBuilder.setVibrate(longArrayOf(10, 100, 10, 100))
+                notificationBuilder.setVibrate(
+                    longArrayOf(
+                        200,
+                        400,
+                        200,
+                        400,
+                        200,
+                        400,
+                        200,
+                        400,
+                        200,
+                        400,
+                        200,
+                        400
+                    )
+                )
             }
         }
 

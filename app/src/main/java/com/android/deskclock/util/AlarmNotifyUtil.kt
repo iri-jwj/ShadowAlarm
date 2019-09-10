@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
 import androidx.core.net.toUri
 import com.android.deskclock.R
 import java.io.File
@@ -32,8 +33,10 @@ class AlarmNotifyUtil(private val context: Context, private val audioPath: Strin
                             0
                         )
                     )
+                    Log.d("AlarmNotify","vibration start")
                 } else {
                     vibration.vibrate(longArrayOf(200, 400, 200, 400, 200, 400), 0)
+                    Log.d("AlarmNotify","vibration start")
                 }
             }
             isNotify = true
@@ -54,6 +57,7 @@ class AlarmNotifyUtil(private val context: Context, private val audioPath: Strin
         player.isLooping = true
         player.prepare()
         player.start()
+        Log.d("AlarmNotify","audio start")
     }
 
     fun stopNotify() {
