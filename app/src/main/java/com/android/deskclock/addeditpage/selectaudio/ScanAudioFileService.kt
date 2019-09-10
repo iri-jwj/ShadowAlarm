@@ -2,12 +2,23 @@ package com.android.deskclock.addeditpage.selectaudio
 
 import android.app.IntentService
 import android.content.Intent
+import android.util.Log
+import kotlinx.coroutines.Runnable
 import java.io.File
 import java.io.FileFilter
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 
 class ScanAudioFileService : IntentService {
+
+    constructor() : this("default")
+
+    constructor(serviceName: String) : super(serviceName)
+
+    private val packageNameFilter = FileFilter {
+        !it.name.startsWith(".") && (it.isDirectory)
+    }
+
     private val fileNameFilter = FileFilter {
         !it.name.startsWith(".") && !it.isDirectory && (it.name.endsWith(
             ".mp3",
@@ -16,15 +27,6 @@ class ScanAudioFileService : IntentService {
                 )
     }
 
-    constructor() : this("default")
-
-    constructor(serviceName: String) : super(serviceName) {
-
-    }
-
-    private val packageNameFilter = FileFilter {
-        !it.name.startsWith(".") && (it.isDirectory)
-    }
 
     private val mWaitForScanDir = ConcurrentLinkedQueue<File>()
     private val fixedThreadPool =
@@ -41,7 +43,8 @@ class ScanAudioFileService : IntentService {
 
     override fun onHandleIntent(intent: Intent?) {
         val path = intent?.getStringExtra("filePath")
-        if (path != null) {
+        if (path != null && path != "") {
+            Log.d("ScanAudioFileService", "path= $path")
             startScan(path)
         } else {
             throw IllegalArgumentException()
@@ -51,10 +54,9 @@ class ScanAudioFileService : IntentService {
 
     private fun startScan(startPath: String) {
         val file = File(startPath)
-        require(!(!file.exists() || !file.isDirectory)) { "路径必须为文件夹" }
-
+        Log.d("ScanAudioFileService", "files = ${file.list()}")
+        require(file.exists() || file.isDirectory) { "路径必须为文件夹" }
         val dirs = file.listFiles(packageNameFilter)
-
         val musicFiles = file.listFiles(fileNameFilter)
 
         var musicFileList: List<File>? = null
@@ -70,7 +72,9 @@ class ScanAudioFileService : IntentService {
             sendResultToView(musicFileList)
         }
 
-        startScanInternal(dirs)
+        if (dirs != null && dirs.isNotEmpty()) {
+            startScanInternal(dirs)
+        }
     }
 
     private fun startScanInternal(dirs: Array<File>) {

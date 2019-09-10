@@ -11,6 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:background="@color/app_item_background"
         app:left_text="@string/select_back"
         app:title="@string/is_repeat" />
 
