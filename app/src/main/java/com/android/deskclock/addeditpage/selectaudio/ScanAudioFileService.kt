@@ -62,9 +62,9 @@ class ScanAudioFileService : IntentService {
         var musicFileList: List<File>? = null
         if (musicFiles != null && musicFiles.isNotEmpty()) {
             musicFileList = ArrayList()
-            (musicFileList as ArrayList).add(file)
+            musicFileList.add(file)
             for (mf in musicFiles) {
-                (musicFileList as ArrayList).add(mf)
+                musicFileList.add(mf)
             }
         }
 
@@ -107,9 +107,9 @@ class ScanAudioFileService : IntentService {
                 var musicFileList: List<File>? = null
                 if (musicFiles.isNotEmpty()) {
                     musicFileList = ArrayList()
-                    (musicFileList as ArrayList).add(f)
+                    musicFileList .add(f)
                     for (mf in musicFiles) {
-                        (musicFileList as ArrayList).add(mf)
+                        musicFileList.add(mf)
                     }
                 }
                 if (musicFileList != null) {

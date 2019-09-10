@@ -19,12 +19,9 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     }
 
     private AlarmDatabase(Context context) {
-        this(context, DatabaseName, null, version);
+        super(context, DatabaseName, null, version);
     }
 
-    private AlarmDatabase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {

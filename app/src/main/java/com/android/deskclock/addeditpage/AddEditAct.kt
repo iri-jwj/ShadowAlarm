@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import android.widget.TextView
@@ -219,7 +218,8 @@ class AddEditAct : BaseView<AddEditPresenter>() {
         val fragment = supportFragmentManager.findFragmentById(R.id.container)
 
         if (fragment != null && fragment.isVisible) {
-            supportFragmentManager.beginTransaction().setCustomAnimations(0,R.anim.fragment_slide_out).remove(fragment).commit()
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(0, R.anim.fragment_slide_out).remove(fragment).commit()
         } else {
             super.onBackPressed()
         }

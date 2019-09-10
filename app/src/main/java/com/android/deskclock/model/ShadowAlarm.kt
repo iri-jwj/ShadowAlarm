@@ -24,8 +24,7 @@ data class ShadowAlarm(
         parcel.readInt(),
         parcel.readString()!!,
         parcel.readInt() != 0
-    ) {
-    }
+    )
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         val enabled = if (isEnabled) {

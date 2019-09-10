@@ -12,10 +12,16 @@ import com.android.deskclock.R
 import com.android.deskclock.addeditpage.AddEditAct
 import com.android.deskclock.model.ShadowAlarm
 import com.android.deskclock.util.OverlayWindowUtil
-import java.lang.StringBuilder
+
 
 class AlarmsAdapter(private val activity: Activity) :
     RecyclerView.Adapter<AlarmsAdapter.AlarmViewHolder>() {
+
+    companion object {
+        const val insertNewAlarm = 1
+        const val deleteAlarm = 2
+        const val updateAlarm = 3
+    }
 
     private var alarmList: List<ShadowAlarm>? = null
 
@@ -24,8 +30,39 @@ class AlarmsAdapter(private val activity: Activity) :
     private lateinit var onItemDeleteCallback: (ShadowAlarm) -> Unit
 
     fun refreshAlarmList(alarms: List<ShadowAlarm>) {
-        alarmList = alarms
+        if (alarmList == null) {
+            alarmList = ArrayList()
+        }
+        (alarmList as ArrayList).clear()
+        (alarmList as ArrayList).addAll(alarms)
         notifyDataSetChanged()
+    }
+
+    fun updateAlarmList(alarm: ShadowAlarm, index: Int, action: Int) {
+        when (action) {
+            insertNewAlarm -> {
+                (alarmList as ArrayList).add(index, alarm)
+                notifyItemInserted(index)
+            }
+            deleteAlarm -> {
+                (alarmList as ArrayList).removeAt(index)
+                notifyItemRemoved(index)
+            }
+            updateAlarm -> {
+                val needUpdate = (alarmList as ArrayList).find {
+                    it.id == alarm.id
+                }
+                val oldIndex = alarmList?.indexOf(needUpdate)
+                (alarmList as ArrayList).removeAt(oldIndex!!)
+                (alarmList as ArrayList).add(index, alarm)
+                if (oldIndex != index) {
+                    notifyItemMoved(oldIndex, index)
+                    notifyItemChanged(index)
+                } else {
+                    notifyItemChanged(index)
+                }
+            }
+        }
     }
 
     fun setOnItemDeleteCallback(callback: (ShadowAlarm) -> Unit) {

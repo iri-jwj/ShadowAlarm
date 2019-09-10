@@ -4,10 +4,7 @@ import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +15,6 @@ import com.android.deskclock.customview.UselessToolbar
 import com.android.deskclock.model.ShadowAlarm
 import com.android.deskclock.model.database.AlarmDatabase
 import com.android.deskclock.util.AlarmManagerUtil
-import java.util.*
 
 class MainActivity : BaseView<HomePagePresenter>() {
     companion object {
@@ -69,11 +65,17 @@ class MainActivity : BaseView<HomePagePresenter>() {
                 if (b != shadowAlarm.isEnabled) {
                     val alarmCopy = shadowAlarm.getNewCopy()
                     alarmCopy.isEnabled = b
-                    mAdapter.refreshAlarmList(mPresenter.updateAlarm(alarmCopy, true))
+                    val list = mPresenter.updateAlarm(alarmCopy, true)
+                    mAdapter.updateAlarmList(
+                        list[0] as ShadowAlarm,
+                        list[1] as Int,
+                        AlarmsAdapter.updateAlarm
+                    )
                 }
             }
             setOnItemDeleteCallback {
-                mAdapter.refreshAlarmList(mPresenter.deleteAlarm(it))
+                val list = mPresenter.deleteAlarm(it)
+                mAdapter.updateAlarmList(list[0] as ShadowAlarm,list[1] as Int,AlarmsAdapter.deleteAlarm)
             }
             refreshAlarmList(mPresenter.getAlarmList())
         }
@@ -91,10 +93,6 @@ class MainActivity : BaseView<HomePagePresenter>() {
         }
     }
 
-    override fun setPresenter(presenter: HomePagePresenter) {
-        super.setPresenter(presenter)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -102,14 +100,24 @@ class MainActivity : BaseView<HomePagePresenter>() {
                 addNewAlarmCode -> {
                     val alarm = data?.getParcelableExtra<ShadowAlarm>("alarm")
                     if (alarm != null) {
-                        mAdapter.refreshAlarmList(mPresenter.addAlarm(alarm))
+                        val list = mPresenter.addAlarm(alarm)
+                        mAdapter.updateAlarmList(
+                            list[0] as ShadowAlarm,
+                            list[1] as Int,
+                            AlarmsAdapter.insertNewAlarm
+                        )
                     }
-
                 }
                 editAlarmCode -> {
                     val alarm = data?.getParcelableExtra<ShadowAlarm>("alarm")
-                    if (alarm != null)
-                        mAdapter.refreshAlarmList(mPresenter.updateAlarm(alarm, false))
+                    if (alarm != null) {
+                        val list = mPresenter.updateAlarm(alarm,false)
+                        mAdapter.updateAlarmList(
+                            list[0] as ShadowAlarm,
+                            list[1] as Int,
+                            AlarmsAdapter.updateAlarm
+                        )
+                    }
                 }
             }
         }

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.deskclock.R
 import java.io.File
 
-class AudioListAdapter(private val context: Context, private val selectedFile: File) :
+class AudioListAdapter(context: Context, private val selectedFile: File) :
     RecyclerView.Adapter<AudioListAdapter.AudioViewHolder>() {
 
     private val typeDir = 1

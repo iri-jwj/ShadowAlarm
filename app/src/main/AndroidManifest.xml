@@ -50,7 +50,6 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".util.AlarmOverlayService" />
         <service android:name=".addeditpage.selectaudio.ScanAudioFileService" />
 
         <provider

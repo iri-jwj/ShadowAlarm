@@ -54,10 +54,11 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
         onOnceAlarmFinishedCallback = callback
     }
 
-    fun deleteAlarm(shadowAlarm: ShadowAlarm): List<ShadowAlarm> {
+    fun deleteAlarm(shadowAlarm: ShadowAlarm): Array<Any> {
         val result = resolver.delete(uri, "id = ?", arrayOf(shadowAlarm.id.toString()))
+        var index = 0
         if (result != 0) {
-            Log.d(tag, "delete target target=${shadowAlarm.id}")
+            index = alarmList.indexOf(shadowAlarm)
             (alarmList as ArrayList).remove(shadowAlarm)
         } else {
             Log.d(tag, "delete failed")
@@ -66,10 +67,10 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
             AlarmManagerUtil.cancelAlarm(shadowAlarm)
         }
         isFiltered = false
-        return alarmList
+        return arrayOf(shadowAlarm, index)
     }
 
-    fun updateAlarm(shadowAlarm: ShadowAlarm, checkedClick: Boolean): List<ShadowAlarm> {
+    fun updateAlarm(shadowAlarm: ShadowAlarm, checkedClick: Boolean): Array<Any> {
 
         val result = resolver.update(
             uri,
@@ -95,17 +96,19 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
             }
             AlarmManagerUtil.updateAlarm(oldCopy, shadowAlarm)
         }
+        val index = alarmList.indexOf(shadowAlarm)
         isFiltered = false
-        return alarmList
+        return arrayOf(shadowAlarm, index)
     }
 
-    fun addAlarm(shadowAlarm: ShadowAlarm): List<ShadowAlarm> {
+    fun addAlarm(shadowAlarm: ShadowAlarm): Array<Any> {
         resolver.insert(uri, buildContentValues(shadowAlarm))
         (alarmList as ArrayList).add(shadowAlarm)
         sortAlarmList()
         AlarmManagerUtil.setAlarm(shadowAlarm)
         isFiltered = false
-        return alarmList
+        val index = alarmList.indexOf(shadowAlarm)
+        return arrayOf(shadowAlarm, index)
     }
 
     fun filterEnabledAlarm(): List<ShadowAlarm> {

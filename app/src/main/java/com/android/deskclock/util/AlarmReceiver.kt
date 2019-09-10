@@ -72,7 +72,6 @@ class AlarmReceiver : BroadcastReceiver() {
         if (isScreenLighted and !isLocked) {
             showAlarmByNotification(context, label, id, remindAction, audioPath)
         } else {
-            //showAlarmByOverlayWindow(context, label, id)
             showAlarmByActivity(context, intent)
         }
     }
@@ -82,13 +81,6 @@ class AlarmReceiver : BroadcastReceiver() {
             createNewIntent(context, oldIntent, LockedScreenAlarmActivity::class.java, null)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(intent)
-    }
-
-    private fun showAlarmByOverlayWindow(context: Context, label: String?, id: Int?) {
-        val intent = Intent(context, AlarmOverlayService::class.java)
-        intent.putExtra("label", label)
-        intent.putExtra("id", id)
-        context.startService(intent)
     }
 
     private fun showAlarmByNotification(
