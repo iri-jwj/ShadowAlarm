@@ -50,7 +50,7 @@ class MainActivity : BaseView<HomePagePresenter>() {
         val toolbar = findViewById<UselessToolbar>(R.id.toolbar)
         toolbar.apply {
             setOnLeftItemClickListener {
-                mAdapter.refreshAlarmList(mPresenter.filterEnabledAlarm())
+                mAdapter.showIfFilteredAlarms()
             }
 
             setOnRightItemClickListener {

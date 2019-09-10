@@ -23,6 +23,9 @@ class AlarmsAdapter(private val activity: Activity) :
         const val updateAlarm = 3
     }
 
+    private var isFiltered = false
+    private var listCopyForFilter: List<ShadowAlarm>? = null
+
     private var alarmList: List<ShadowAlarm>? = null
 
     private lateinit var onCheckedChangeCallback: (Boolean, ShadowAlarm) -> Unit
@@ -41,26 +44,94 @@ class AlarmsAdapter(private val activity: Activity) :
     fun updateAlarmList(alarm: ShadowAlarm, index: Int, action: Int) {
         when (action) {
             insertNewAlarm -> {
-                (alarmList as ArrayList).add(index, alarm)
-                notifyItemInserted(index)
+                if (isFiltered) {
+                    (listCopyForFilter as ArrayList).add(index, alarm)
+                    showFilterAlarms(false)
+                    notifyDataSetChanged()
+                } else {
+                    (alarmList as ArrayList).add(index, alarm)
+                    notifyItemInserted(index)
+                }
             }
             deleteAlarm -> {
-                (alarmList as ArrayList).removeAt(index)
-                notifyItemRemoved(index)
+                if (isFiltered) {
+                    (listCopyForFilter as ArrayList).removeAt(index)
+                    val target = alarmList?.find {
+                        it.id == alarm.id
+                    }
+                    if (target != null) {
+                        val targetIndex = (alarmList as ArrayList).indexOf(target)
+                        (alarmList as ArrayList).removeAt(targetIndex)
+                        notifyItemRemoved(targetIndex)
+                    }
+                } else {
+                    (alarmList as ArrayList).removeAt(index)
+                    notifyItemRemoved(index)
+                }
             }
             updateAlarm -> {
-                val needUpdate = (alarmList as ArrayList).find {
-                    it.id == alarm.id
-                }
-                val oldIndex = alarmList?.indexOf(needUpdate)
-                (alarmList as ArrayList).removeAt(oldIndex!!)
-                (alarmList as ArrayList).add(index, alarm)
-                if (oldIndex != index) {
-                    notifyItemMoved(oldIndex, index)
-                    notifyItemChanged(index)
+                if (isFiltered) {
+                    val needUpdate = listCopyForFilter?.find {
+                        it.id == alarm.id
+                    }
+                    (listCopyForFilter as ArrayList).remove(needUpdate)
+                    (listCopyForFilter as ArrayList).add(index, alarm)
+                    val filteredList = listCopyForFilter?.filter {
+                        it.isEnabled
+                    }
+                    val filteredIndex = filteredList?.indexOf(alarm)
+                    val oldIndex = alarmList?.indexOf(needUpdate)
+                    if (alarm.isEnabled) {
+                        (alarmList as ArrayList).removeAt(oldIndex!!)
+                        (alarmList as ArrayList).add(filteredIndex!!, alarm)
+                        notifyItemMoved(oldIndex, filteredIndex)
+                        notifyItemChanged(filteredIndex)
+                    } else {
+                        (alarmList as ArrayList).removeAt(oldIndex!!)
+                        notifyItemRemoved(oldIndex)
+                    }
                 } else {
-                    notifyItemChanged(index)
+                    val needUpdate = (alarmList as ArrayList).find {
+                        it.id == alarm.id
+                    }
+                    val oldIndex = alarmList?.indexOf(needUpdate)
+                    (alarmList as ArrayList).removeAt(oldIndex!!)
+                    (alarmList as ArrayList).add(index, alarm)
+                    if (oldIndex != index) {
+                        notifyItemMoved(oldIndex, index)
+                        notifyItemChanged(index)
+                    } else {
+                        notifyItemChanged(index)
+                    }
                 }
+            }
+        }
+    }
+
+    fun showIfFilteredAlarms() {
+        isFiltered = !isFiltered
+        if (isFiltered) {
+            showFilterAlarms(true)
+        } else {
+            (alarmList as ArrayList).clear()
+            (alarmList as ArrayList).addAll(listCopyForFilter!!)
+        }
+        notifyDataSetChanged()
+    }
+
+    private fun showFilterAlarms(isFilterButtonClick: Boolean) {
+        if (listCopyForFilter == null) {
+            listCopyForFilter = ArrayList()
+        }
+        alarmList = if (isFilterButtonClick) {
+            (listCopyForFilter as ArrayList).clear()
+            (listCopyForFilter as ArrayList).addAll(alarmList!!)
+            alarmList?.filter {
+                it.isEnabled
+            }
+        } else {
+            listCopyForFilter?.filter {
+                it.isEnabled
             }
         }
     }
