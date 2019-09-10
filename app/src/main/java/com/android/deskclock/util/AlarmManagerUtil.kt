@@ -120,7 +120,7 @@ object AlarmManagerUtil {
     private fun cancelAlarm(shadowAlarm: ShadowAlarm, needCancelFlags: Int) {
         val intId = abs(shadowAlarm.id.hashCode())
 
-        if (needCancelFlags == 0 || needCancelFlags == EVERYDAY) {
+        if (needCancelFlags == 0 || needCancelFlags == EVERYDAY || shadowAlarm.remindDaysInWeek == EVERYDAY) {
 
             val intent = getIntent(mContext, shadowAlarm, AlarmReceiver::class.java)
             val pendingIntent =
@@ -183,13 +183,19 @@ object AlarmManagerUtil {
         )
 
         if (remindFlags == 0) {
-            Log.d("AlarmManagerUtil", "set exact time: ${calendar.timeInMillis - System.currentTimeMillis()}")
+            Log.d(
+                "AlarmManagerUtil",
+                "set exact time: ${calendar.timeInMillis - System.currentTimeMillis()}"
+            )
             val pendingIntent =
                 PendingIntent.getBroadcast(mContext, id, intent, PendingIntent.FLAG_ONE_SHOT)
             mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
         } else {
             if (remindFlags == EVERYDAY) {
-                Log.d("AlarmManagerUtil", "set Every day time: ${calendar.timeInMillis - System.currentTimeMillis()}")
+                Log.d(
+                    "AlarmManagerUtil",
+                    "set Every day time: ${calendar.timeInMillis - System.currentTimeMillis()}"
+                )
 
                 val pendingIntent =
                     PendingIntent.getBroadcast(
@@ -207,7 +213,10 @@ object AlarmManagerUtil {
 
             } else {
                 for (i in 1..7) {
-                    Log.d("AlarmManagerUtil", "set target time: ${calendar.timeInMillis - System.currentTimeMillis()},i = $i")
+                    Log.d(
+                        "AlarmManagerUtil",
+                        "set target time: ${calendar.timeInMillis - System.currentTimeMillis()},i = $i"
+                    )
 
                     var temp = 1
                     temp = temp.shl(i - 1)
