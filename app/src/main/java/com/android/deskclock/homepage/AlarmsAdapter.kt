@@ -33,12 +33,25 @@ class AlarmsAdapter(private val activity: Activity) :
     private lateinit var onItemDeleteCallback: (ShadowAlarm) -> Unit
 
     fun refreshAlarmList(alarms: List<ShadowAlarm>) {
-        if (alarmList == null) {
-            alarmList = ArrayList()
+        if (!isFiltered) {
+            if (alarmList == null) {
+                alarmList = ArrayList()
+            }
+            (alarmList as ArrayList).clear()
+            (alarmList as ArrayList).addAll(alarms)
+            notifyDataSetChanged()
+        } else {
+            if (alarmList == null) {
+                alarmList = ArrayList()
+            }
+
+            (listCopyForFilter as ArrayList).clear()
+            (listCopyForFilter as ArrayList).addAll(alarms)
+            alarmList = listCopyForFilter?.filter {
+                it.isEnabled
+            }
+            notifyDataSetChanged()
         }
-        (alarmList as ArrayList).clear()
-        (alarmList as ArrayList).addAll(alarms)
-        notifyDataSetChanged()
     }
 
     fun updateAlarmList(alarm: ShadowAlarm, index: Int, action: Int) {
@@ -82,10 +95,12 @@ class AlarmsAdapter(private val activity: Activity) :
                     val filteredIndex = filteredList?.indexOf(alarm)
                     val oldIndex = alarmList?.indexOf(needUpdate)
                     if (alarm.isEnabled) {
-                        (alarmList as ArrayList).removeAt(oldIndex!!)
-                        (alarmList as ArrayList).add(filteredIndex!!, alarm)
-                        notifyItemMoved(oldIndex, filteredIndex)
-                        notifyItemChanged(filteredIndex)
+                        if (needUpdate!!.isEnabled) {
+                            (alarmList as ArrayList).removeAt(oldIndex!!)
+                            (alarmList as ArrayList).add(filteredIndex!!, alarm)
+                            notifyItemMoved(oldIndex, filteredIndex)
+                            notifyItemChanged(filteredIndex)
+                        }
                     } else {
                         (alarmList as ArrayList).removeAt(oldIndex!!)
                         notifyItemRemoved(oldIndex)
