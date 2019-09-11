@@ -62,7 +62,7 @@ class AlarmProvider : ContentProvider() {
                         null,
                         null,
                         null,
-                        AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR + " ," + AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE + " ASC"
+                        AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_HOUR + " ," + AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_MINUTE + " ASC"
                     )
                     writableDb?.setTransactionSuccessful()
 
@@ -136,11 +136,11 @@ class AlarmProvider : ContentProvider() {
             val label =
                 cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL))
             val hour =
-                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR))
+                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_HOUR))
             val minute =
-                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE))
+                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_MINUTE))
             val remindDayOfWeek =
-                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK))
+                cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_DAYS_IN_WEEK))
             val remindAction =
                 cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION))
             val remindAudio =
@@ -148,9 +148,9 @@ class AlarmProvider : ContentProvider() {
 
             if (isEnable && !contentValues!!.getAsBoolean(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)
                 && label == contentValues.getAsString(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL)
-                && hour == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR)
-                && minute == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE)
-                && remindDayOfWeek == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK)
+                && hour == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_HOUR)
+                && minute == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_MINUTE)
+                && remindDayOfWeek == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_DAYS_IN_WEEK)
                 && remindAction == contentValues.getAsInteger(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION)
                 && remindAudio == contentValues.getAsString(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_AUDIO)
             ) {

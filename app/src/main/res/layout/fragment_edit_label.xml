@@ -33,8 +33,10 @@
             android:autoSizeMaxTextSize="@dimen/notification_app_name"
             android:autoSizeMinTextSize="@dimen/notification_label"
             android:maxLines="1"
+            android:inputType="text"
             android:singleLine="true"
             android:background="@null"
+            android:autofillHints="@string/label_hint"
             android:focusable="true"
             android:hint="@string/label_hint" />
 

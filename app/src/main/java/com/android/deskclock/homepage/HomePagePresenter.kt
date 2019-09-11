@@ -37,8 +37,6 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
 
     private lateinit var alarmList: List<ShadowAlarm>
 
-    private var isFiltered = false
-
     private var onOnceAlarmFinishedCallback: () -> Unit = {
 
     }
@@ -66,7 +64,6 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
         if (shadowAlarm.isEnabled) {
             AlarmManagerUtil.cancelAlarm(shadowAlarm)
         }
-        isFiltered = false
         return arrayOf(shadowAlarm, index)
     }
 
@@ -98,7 +95,6 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
             AlarmManagerUtil.updateAlarm(oldCopy, shadowAlarm)
         }
         val index = alarmList.indexOf(old)
-        isFiltered = false
         return arrayOf(shadowAlarm, index)
     }
 
@@ -107,18 +103,8 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
         (alarmList as ArrayList).add(shadowAlarm)
         sortAlarmList()
         AlarmManagerUtil.setAlarm(shadowAlarm)
-        isFiltered = false
         val index = alarmList.indexOf(shadowAlarm)
         return arrayOf(shadowAlarm, index)
-    }
-
-    fun filterEnabledAlarm(): List<ShadowAlarm> {
-        isFiltered = !isFiltered
-        return if (isFiltered) alarmList.filter {
-            it.isEnabled
-        } else {
-            alarmList
-        }
     }
 
     private fun sortAlarmList() {
@@ -137,9 +123,9 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
                 val alarm = ShadowAlarm(
                     UUID.fromString(cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ID))),
                     cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL)),
-                    cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR)),
-                    cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE)),
-                    cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK)),
+                    cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_HOUR)),
+                    cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_MINUTE)),
+                    cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_DAYS_IN_WEEK)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION)),
                     cursor.getString(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_AUDIO)),
                     cursor.getInt(cursor.getColumnIndex(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ENABLED)) == 1
@@ -157,10 +143,10 @@ class HomePagePresenter(private val context: Context) : BasePresenter,
         values.apply {
             put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_ID, shadowAlarm.id.toString())
             put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_LABEL, shadowAlarm.label)
-            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDHOUR, shadowAlarm.remindHours)
-            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDMINUTE, shadowAlarm.remindMinutes)
+            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_HOUR, shadowAlarm.remindHours)
+            put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_MINUTE, shadowAlarm.remindMinutes)
             put(
-                AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK,
+                AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_DAYS_IN_WEEK,
                 shadowAlarm.remindDaysInWeek
             )
             put(AlarmDatabase.AlarmDatabaseEntity.COLUMN_REMIND_ACTION, shadowAlarm.remindAction)

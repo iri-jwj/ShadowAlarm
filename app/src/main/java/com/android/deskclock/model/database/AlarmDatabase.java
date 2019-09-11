@@ -28,9 +28,9 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE TABLE " + AlarmDatabaseEntity.TABLE_NAME + "(" +
                 AlarmDatabaseEntity.COLUMN_ID + " text Primary Key, " +
                 AlarmDatabaseEntity.COLUMN_LABEL + " text, " +
-                AlarmDatabaseEntity.COLUMN_REMINDHOUR + " integer, " +
-                AlarmDatabaseEntity.COLUMN_REMINDMINUTE + " integer, " +
-                AlarmDatabaseEntity.COLUMN_REMINDDAYSINWEEK + " integer ," +
+                AlarmDatabaseEntity.COLUMN_REMIND_HOUR + " integer, " +
+                AlarmDatabaseEntity.COLUMN_REMIND_MINUTE + " integer, " +
+                AlarmDatabaseEntity.COLUMN_REMIND_DAYS_IN_WEEK + " integer ," +
                 AlarmDatabaseEntity.COLUMN_REMIND_ACTION + " integer ," +
                 AlarmDatabaseEntity.COLUMN_REMIND_AUDIO + " text, " +
                 AlarmDatabaseEntity.COLUMN_ENABLED + " bool)"
@@ -46,9 +46,9 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         public static final String TABLE_NAME = "SHADOW_ALARM";
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_LABEL = "label";
-        public static final String COLUMN_REMINDHOUR = "remindHours";
-        public static final String COLUMN_REMINDMINUTE = "remindMinutes";
-        public static final String COLUMN_REMINDDAYSINWEEK = "remindDaysInWeek";
+        public static final String COLUMN_REMIND_HOUR = "remindHours";
+        public static final String COLUMN_REMIND_MINUTE = "remindMinutes";
+        public static final String COLUMN_REMIND_DAYS_IN_WEEK = "remindDaysInWeek";
         public static final String COLUMN_REMIND_ACTION = "remindAction";
         public static final String COLUMN_REMIND_AUDIO = "remindAudio";
         public static final String COLUMN_ENABLED = "isEnabled";

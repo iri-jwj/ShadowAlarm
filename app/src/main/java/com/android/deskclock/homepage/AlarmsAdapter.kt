@@ -183,9 +183,7 @@ class AlarmsAdapter(private val activity: Activity) :
         holder.getLabelTextView().text =
             getFormattedLabelString(alarm.label, alarm.remindDaysInWeek)
 
-        holder.getSwitchButton().setOnCheckedChangeListener { _, _ ->
-
-        }
+        holder.getSwitchButton().setOnCheckedChangeListener { _, _ -> }
 
         holder.getSwitchButton().isChecked = alarm.isEnabled
 
@@ -216,11 +214,11 @@ class AlarmsAdapter(private val activity: Activity) :
     private fun getFormattedLabelString(label: String, remindDaysInWeek: Int): String {
         val builder = StringBuilder()
         builder.append(label)
-        builder.append(" ")
+        builder.append(", ")
         when (remindDaysInWeek) {
-            0b0111110 -> builder.append(", 每工作日")
-            0b1000001 -> builder.append(", 每周末")
-            0b1111111 -> builder.append(", 每天")
+            0b0111110 -> builder.append(" 每工作日")
+            0b1000001 -> builder.append(" 每周末")
+            0b1111111 -> builder.append(" 每天")
             else -> for (i in 1..7) {
                 var temp = 1
                 temp = temp.shl(i - 1)

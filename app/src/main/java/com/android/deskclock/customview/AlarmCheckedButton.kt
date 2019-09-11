@@ -1,7 +1,6 @@
 package com.android.deskclock.customview
 
 import android.content.Context
-import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
 
