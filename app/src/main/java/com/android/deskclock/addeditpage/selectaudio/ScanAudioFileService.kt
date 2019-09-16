@@ -3,7 +3,6 @@ package com.android.deskclock.addeditpage.selectaudio
 import android.app.IntentService
 import android.content.Intent
 import android.util.Log
-import kotlinx.coroutines.Runnable
 import java.io.File
 import java.io.FileFilter
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -107,7 +106,7 @@ class ScanAudioFileService : IntentService {
                 var musicFileList: List<File>? = null
                 if (musicFiles.isNotEmpty()) {
                     musicFileList = ArrayList()
-                    musicFileList .add(f)
+                    musicFileList.add(f)
                     for (mf in musicFiles) {
                         musicFileList.add(mf)
                     }
